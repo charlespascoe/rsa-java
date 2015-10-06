@@ -12,13 +12,13 @@ public class RsaPrivateKey {
     private BigInteger d;
 
     public RsaPrivateKey(int bits) {
-        this.e = new BitIngeger("65537");
+        this.e = new BigInteger("65537");
 
         Random r = new Random();
 
         do {
-            this.p = new BigInteger(bit / 2, 15, r);
-            this.q = new BigInteger(bit / 2, 15, r);
+            this.p = new BigInteger(bits / 2, 15, r);
+            this.q = new BigInteger(bits / 2, 15, r);
 
             this.n = this.p.multiply(q);
             this.phi_n = this.p.subtract(BigInteger.ONE).multiply(this.q.subtract(BigInteger.ONE));
