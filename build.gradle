@@ -1,0 +1,38 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'uk.co.cpascoe.rsa_java.Program'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+test {
+    // show standard out and standard error of the test JVM(s) on the console
+    testLogging.showStandardStreams = true
+
+    // listen to events in the test execution lifecycle
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+}
+
+task "testall" {
+    dependsOn "cleanTest", "test"
+}
+
+jar {
+    baseName = 'rsa_java'
+    version =  '0.0.1'
+    manifest {
+        attributes 'Main-Class': 'uk.co.cpascoe.rsa_java.Program'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
