@@ -3,13 +3,11 @@ package uk.co.cpascoe.rsa;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class RsaPrivateKey extends RsaKey {
-    private BigInteger p;
-    private BigInteger q;
-    private BigInteger n;
-    private BigInteger phi_n;
-    private BigInteger e;
-    private BigInteger d;
+public class RsaPrivateKey extends RsaPublicKey {
+    protected BigInteger p;
+    protected BigInteger q;
+    protected BigInteger phi_n;
+    protected BigInteger d;
 
     public RsaPrivateKey(int bits) {
         this.e = new BigInteger("65537");
@@ -28,5 +26,7 @@ public class RsaPrivateKey extends RsaKey {
         this.d = this.e.modInverse(this.phi_n);
     }
 
-
+    public BitInteger privateExponentation(BigInteger val) {
+        return val.modPow(this.d, this.n);
+    }
 }
