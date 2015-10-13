@@ -69,6 +69,15 @@ public class RsaPrivateKey extends RsaKey {
         return val.modPow(this.d, this.n);
     }
 
+    public BigInteger fastPrivateExponentation(BigInteger val) {
+        BigInteger m1 = val.modPow(this.dp, this.p);
+        BigInteger m2 = val.modPow(this.dq, this.q);
+
+        BigInteger h = this.qinv.multiply(m1.subtract(m2)).mod(this.p);
+
+        return m2.add(h.multiply(this.q));
+    }
+
     @Override
     public Map<String, String> exportToMap() {
         Map<String, String> data = super.exportToMap();
