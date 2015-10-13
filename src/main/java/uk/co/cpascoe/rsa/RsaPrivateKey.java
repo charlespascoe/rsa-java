@@ -3,7 +3,7 @@ package uk.co.cpascoe.rsa;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class RsaPrivateKey extends RsaPublicKey {
+public class RsaPrivateKey extends RsaKey {
     protected BigInteger p;
     protected BigInteger q;
     protected BigInteger phi_n;

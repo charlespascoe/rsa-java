@@ -2,7 +2,7 @@ package uk.co.cpascoe.rsa;
 
 import java.math.BigInteger;
 
-public class RsaPublicKey {
+public class RsaKey {
     protected BigInteger n;
     protected BigInteger e;
 
