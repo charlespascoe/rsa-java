@@ -20,4 +20,18 @@ public abstract class Utils {
 
         return data;
     }
+
+    public static byte[] xorBytes(byte[] a, byte[] b) throws Exception {
+        if (a.length != b.length) {
+            throw new Exception("Arrays have different lengths");
+        }
+
+        byte[] out = new byte[a.length];
+
+        for (int i = 0; i < out.length; i++) {
+            out[i] = a[i] ^ b[i];
+        }
+
+        return out;
+    }
 }
