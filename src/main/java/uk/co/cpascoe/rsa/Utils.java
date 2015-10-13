@@ -34,4 +34,23 @@ public abstract class Utils {
 
         return out;
     }
+
+    public static byte[] concat(byte[]... arrays) {
+        int length = 0;
+
+        for (byte[] array : arrays) {
+            length += array.length;
+        }
+
+        byte[] out = new byte[length];
+
+        int pos = 0;
+
+        for (byte[] array : arrays) {
+            System.arraycopy(array, 0, out, pos, array.length);
+            pos += array.length;
+        }
+
+        return out;
+    }
 }
