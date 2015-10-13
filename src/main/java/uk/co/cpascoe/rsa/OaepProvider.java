@@ -2,6 +2,7 @@ package uk.co.cpascoe.rsa;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 public class OaepProvider {
     private MaskGenerator maskGen;
@@ -33,7 +34,29 @@ public class OaepProvider {
     }
 
     public byte[] encode(byte[] msg, int keyLength, byte[] label, boolean labelIsHash) throws Exception {
-        return new byte[0];
+        if (msg.length > this.maxMessageLength(keyLength)) {
+            throw new Exception("Message too long");
+        }
+
+        byte[] labelHash;
+
+        if (labelIsHash) {
+            if (label.length != this.digestLength) {
+                throw new Exception("Label length is not equal to the digest length");
+            }
+
+            labelHash = label;
+        } else {
+            labelHash = MessageDigest.getInstance(this.digestName).digest(label);
+        }
+
+        byte[] dataBlock = OaepProvider.buildDataBlock(labelHash, msg, keyLength, this.maxMessageLength(keyLength));
+        byte[] seed = new SecureRandom().generateSeed(this.digestLength);
+
+        byte[] maskedDataBlock = Utils.xorBytes(dataBlock, this.maskGen.generateMask(seed, dataBlock.length));
+        byte[] maskedSeed = Utils.xorBytes(seed, this.maskGen.generateMask(maskedDataBlock, seed.length));
+
+        return Utils.concat(maskedDataBlock, maskedSeed);
     }
 
     public static byte[] buildDataBlock(byte[] labelHash, byte[] msg, int keyLength, int maxMessageLength) throws Exception {
