@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 public abstract class Utils {
     public static boolean isValidHex(String str) {
-        Pattern p = Pattern.compile("^([0-9A-Fa-f]{2})+$");
+        Pattern p = Pattern.compile("^[0-9A-Fa-f]+$");
         return p.matcher(str).matches();
     }
 }
