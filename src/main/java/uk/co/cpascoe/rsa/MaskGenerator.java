@@ -1,12 +1,13 @@
 package uk.co.cpascoe.rsa;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MaskGenerator {
     private String mdName;
     private int digestLength;
 
-    public MaskGenerator(String mdName) {
+    public MaskGenerator(String mdName) throws NoSuchAlgorithmException {
         this.mdName = mdName;
         this.digestLength = MessageDigest.getInstance(mdName).getDigestLength();
     }
@@ -19,7 +20,7 @@ public class MaskGenerator {
         return this.digestLength;
     }
 
-    public byte[] generateMask(byte[] seed, int length) {
+    public byte[] generateMask(byte[] seed, int length) throws NoSuchAlgorithmException {
         int lengthModDigestLength = length % this.digestLength;
 
         int blocks = (length / this.digestLength) + (lengthModDigestLength == 0 ? 0 : 1);
