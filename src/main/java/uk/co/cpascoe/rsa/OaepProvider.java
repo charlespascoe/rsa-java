@@ -35,4 +35,25 @@ public class OaepProvider {
     public byte[] encode(byte[] msg, int keyLength, byte[] label, boolean labelIsHash) throws Exception {
         return new byte[0];
     }
+
+    public static byte[] buildDataBlock(byte[] labelHash, byte[] msg, int keyLength, int maxMessageLength) {
+        int paddingLength = maxMessageLength - msg.length;
+        int blockLength = labelHash.length + paddingLength + 1 + msg.length;
+
+        byte[] dataBlock = new byte[blockLength];
+
+        int position = 0;
+        System.arraycopy(labelHash, 0, dataBlock, position, labelHash.length);
+        position += labelHash.length;
+
+        // Add 0 padding
+        position += paddingLength;
+
+        dataBlock[position] = 1;
+        position++;
+
+        System.arraycopy(msg, 0, dataBlock, position, msg.length);
+
+        return dataBlock;
+    }
 }
