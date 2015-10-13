@@ -2,6 +2,8 @@ package uk.co.cpascoe.rsa;
 
 import java.math.BigInteger;
 import java.util.Random;
+import java.util.Map;
+import java.util.HashMap;
 
 public class RsaPrivateKey extends RsaKey {
     protected BigInteger p;
@@ -34,5 +36,20 @@ public class RsaPrivateKey extends RsaKey {
 
     public BigInteger privateExponentation(BigInteger val) {
         return val.modPow(this.d, this.n);
+    }
+
+    @Override
+    public Map<String, String> exportToMap() {
+        Map<String, String> data = super.exportToMap();
+
+        data.put("p", this.p.toString(16));
+        data.put("q", this.q.toString(16));
+        data.put("phi_n", this.phi_n.toString(16));
+        data.put("d", this.d.toString(16));
+        data.put("dp", this.dp.toString(16));
+        data.put("dq", this.dq.toString(16));
+        data.put("qinv", this.qinv.toString(16));
+
+        return data;
     }
 }
