@@ -7,4 +7,17 @@ public abstract class Utils {
         Pattern p = Pattern.compile("^[0-9A-Fa-f]+$");
         return p.matcher(str).matches();
     }
+
+    public static byte[] intToBytes(int value) {
+        byte[] data = new byte[4];
+
+        int mask = 255;
+
+        for (int i = 3; i >= 0; i--) {
+            data[i] = (byte)(mask & value);
+            mask = mask << 8;
+        }
+
+        return data;
+    }
 }
