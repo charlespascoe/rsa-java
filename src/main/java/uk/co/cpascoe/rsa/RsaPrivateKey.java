@@ -14,6 +14,37 @@ public class RsaPrivateKey extends RsaKey {
     protected BigInteger dq;
     protected BigInteger qinv;
 
+    public RsaPrivateKey(Map<String, String> data) throws Exception {
+        if (!data.containsKey("n") ||
+            !data.containsKey("e") ||
+            !data.containsKey("p") ||
+            !data.containsKey("q") ||
+            !data.containsKey("phi_n") ||
+            !data.containsKey("d") ||
+            !data.containsKey("dp") ||
+            !data.containsKey("dq") ||
+            !data.containsKey("qinv")) {
+
+            throw new Exception("Keys missing from data object");
+        }
+
+        for (Map.Entry<String, String> entry : data.entrySet()) {
+            if (!Utils.isValidHex(entry.getValue())) {
+                throw new Exception("Invalid hex values");
+            }
+        }
+
+        this.n = new BigInteger(data.get("n"), 16);
+        this.e = new BigInteger(data.get("e"), 16);
+        this.p = new BigInteger(data.get("p"), 16);
+        this.q = new BigInteger(data.get("q"), 16);
+        this.phi_n = new BigInteger(data.get("phi_n"), 16);
+        this.d = new BigInteger(data.get("d"), 16);
+        this.dp = new BigInteger(data.get("dp"), 16);
+        this.dq = new BigInteger(data.get("dq"), 16);
+        this.qinv = new BigInteger(data.get("qinv"), 16);
+    }
+
     public RsaPrivateKey(int bits) {
         this.e = new BigInteger("65537");
 
