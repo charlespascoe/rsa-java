@@ -29,7 +29,7 @@ public abstract class Utils {
         byte[] out = new byte[a.length];
 
         for (int i = 0; i < out.length; i++) {
-            out[i] = a[i] ^ b[i];
+            out[i] = (byte)(a[i] ^ b[i]);
         }
 
         return out;

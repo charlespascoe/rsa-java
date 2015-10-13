@@ -36,7 +36,7 @@ public class OaepProvider {
         return new byte[0];
     }
 
-    public static byte[] buildDataBlock(byte[] labelHash, byte[] msg, int keyLength, int maxMessageLength) {
+    public static byte[] buildDataBlock(byte[] labelHash, byte[] msg, int keyLength, int maxMessageLength) throws Exception {
         if (msg.length > maxMessageLength) {
             throw new Exception("Message too long");
         }
