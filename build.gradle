@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'uk.co.cpascoe.rsa_java.Program'
+mainClassName = 'uk.co.cpascoe.rsa.Program'
 
 repositories {
     mavenCentral()
@@ -26,10 +26,10 @@ task "testall" {
 }
 
 jar {
-    baseName = 'rsa_java'
+    baseName = 'rsa'
     version =  '0.0.1'
     manifest {
-        attributes 'Main-Class': 'uk.co.cpascoe.rsa_java.Program'
+        attributes 'Main-Class': 'uk.co.cpascoe.rsa.Program'
     }
 }
 
