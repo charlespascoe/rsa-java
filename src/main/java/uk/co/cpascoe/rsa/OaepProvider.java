@@ -37,6 +37,10 @@ public class OaepProvider {
     }
 
     public static byte[] buildDataBlock(byte[] labelHash, byte[] msg, int keyLength, int maxMessageLength) {
+        if (msg.length > maxMessageLength) {
+            throw new Exception("Message too long");
+        }
+
         int paddingLength = maxMessageLength - msg.length;
         int blockLength = labelHash.length + paddingLength + 1 + msg.length;
 
