@@ -8,6 +8,10 @@ public class RsaKey {
     protected BigInteger n;
     protected BigInteger e;
 
+    public RsaKey() {
+
+    }
+
     public RsaKey(Map<String, String> data) throws Exception {
         if (!data.containsKey("n") || !data.containsKey("e")) {
             throw new Exception("Keys missing from data object");
