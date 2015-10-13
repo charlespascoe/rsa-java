@@ -1,6 +1,8 @@
 package uk.co.cpascoe.rsa;
 
 import java.math.BigInteger;
+import java.util.Map;
+import java.util.HashMap;
 
 public class RsaKey {
     protected BigInteger n;
@@ -12,5 +14,14 @@ public class RsaKey {
 
     public byte[] exportDer() {
         return new byte[0];
+    }
+
+    public Map<String, String> exportToMap() {
+        Map<String, String> data = new HashMap<String, String>();
+
+        data.put("n", n.toString(16));
+        data.put("e", e.toString(16));
+
+        return data;
     }
 }
