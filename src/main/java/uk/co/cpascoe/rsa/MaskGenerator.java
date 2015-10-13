@@ -11,6 +11,14 @@ public class MaskGenerator {
         this.digestLength = MessageDigest.getInstance(mdName).getDigestLength();
     }
 
+    public String getDigestName() {
+        return this.mdName;
+    }
+
+    public int getDigestLength() {
+        return this.digestLength;
+    }
+
     public byte[] generateMask(byte[] seed, int length) {
         int lengthModDigestLength = length % this.digestLength;
 
