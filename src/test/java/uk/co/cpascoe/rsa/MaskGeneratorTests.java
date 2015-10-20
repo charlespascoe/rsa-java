@@ -43,7 +43,9 @@ public class MaskGeneratorTests {
     public void shouldGenerateCorrectLengthOfData() throws NoSuchAlgorithmException {
         MaskGenerator mg = this.createMaskGen();
 
-        assertArrayEquals(mg.generateMask(new byte[0], 0), new byte[0]);
+        for (int i = 0; i <= 128; i++) {
+            assertEquals(mg.generateMask(new byte[0], i).length, i);
+        }
     }
 
 }
