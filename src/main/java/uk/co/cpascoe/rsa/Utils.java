@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 public abstract class Utils {
     public static boolean isValidHex(String str) {
+        if (str == null) return false;
         Pattern p = Pattern.compile("^[0-9A-Fa-f]+$");
         return p.matcher(str).matches();
     }
@@ -15,7 +16,7 @@ public abstract class Utils {
 
         for (int i = 3; i >= 0; i--) {
             data[i] = (byte)(mask & value);
-            mask = mask << 8;
+            value = value >> 8;
         }
 
         return data;
