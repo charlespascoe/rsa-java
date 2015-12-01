@@ -3,12 +3,24 @@ package uk.co.cpascoe.rsa;
 import java.util.regex.Pattern;
 
 public abstract class Utils {
+    /**
+     * Returns true if the string is a string of only one or more hex characters (0-9,a-f,A-F)
+     *
+     * @param str The string under test
+     */
     public static boolean isValidHex(String str) {
         if (str == null) return false;
         Pattern p = Pattern.compile("^[0-9A-Fa-f]+$");
         return p.matcher(str).matches();
     }
 
+    /**
+     * Returns the big-endian byte representation of the integer
+     *
+     * @param value The value to convert
+     *
+     * @return A byte array of length 4
+     */
     public static byte[] intToBytes(int value) {
         byte[] data = new byte[4];
 
@@ -22,6 +34,12 @@ public abstract class Utils {
         return data;
     }
 
+    /**
+     * Returns the result of the two byte arrays xored together
+     *
+     * @param a The first array
+     * @param b The second array, which must be the same length as 'a'
+     */
     public static byte[] xorBytes(byte[] a, byte[] b) throws Exception {
         if (a.length != b.length) {
             throw new Exception("Arrays have different lengths");
@@ -36,6 +54,9 @@ public abstract class Utils {
         return out;
     }
 
+    /**
+     * Returns a byte array consisting of the concatenated byte arrays passed in as parameters
+     */
     public static byte[] concat(byte[]... arrays) {
         int length = 0;
 
