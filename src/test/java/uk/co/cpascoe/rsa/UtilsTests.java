@@ -75,13 +75,13 @@ public class UtilsTests {
     @Test
     public void concat() {
         // Can handle 0 to 3 arguments
-        assertArrayEquals(Utils.concat(), new byte[0]);
-        assertArrayEquals(Utils.concat(new byte[0]), new byte[0]);
-        assertArrayEquals(Utils.concat(new byte[0], new byte[0]), new byte[0]);
-        assertArrayEquals(Utils.concat(new byte[0], new byte[0], new byte[0]), new byte[0]);
+        assertArrayEquals(new byte[0], Utils.concat());
+        assertArrayEquals(new byte[0], Utils.concat(new byte[0]));
+        assertArrayEquals(new byte[0], Utils.concat(new byte[0], new byte[0]));
+        assertArrayEquals(new byte[0], Utils.concat(new byte[0], new byte[0], new byte[0]));
 
         // Check ordering
-        assertArrayEquals(Utils.concat(new byte[] { 1, 2, 3 }, new byte[] { 4, 5, 6 }, new byte[] { 7, 8, 9 }), new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+        assertArrayEquals(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, Utils.concat(new byte[] { 1, 2, 3 }, new byte[] { 4, 5, 6 }, new byte[] { 7, 8, 9 }));
     }
 
 }
