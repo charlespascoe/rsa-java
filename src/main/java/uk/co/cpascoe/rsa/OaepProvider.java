@@ -63,7 +63,7 @@ public class OaepProvider {
         byte[] maskedDataBlock = Utils.xorBytes(dataBlock, this.maskGen.generateMask(seed, dataBlock.length));
         byte[] maskedSeed = Utils.xorBytes(seed, this.maskGen.generateMask(maskedDataBlock, seed.length));
 
-        return Utils.concat(maskedDataBlock, maskedSeed);
+        return Utils.concat(maskedSeed, maskedDataBlock);
     }
 
     public static byte[] buildDataBlock(byte[] labelHash, byte[] msg, int maxMessageLength) throws Exception {
