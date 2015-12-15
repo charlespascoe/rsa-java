@@ -34,6 +34,13 @@ public class BigIntTests {
     }
 
     @Test
+    public void digitCount() {
+        assertEquals(1, new BigInt(0).digitCount());
+        assertEquals(1, new BigInt((int)4294967295L).digitCount());
+        assertEquals(2, new BigInt(new int[] {0,1}).digitCount());
+    }
+
+    @Test
     public void getBitAt() {
         assertEquals(0, new BigInt(0).getBitAt(0));
         assertEquals(1, new BigInt(1).getBitAt(0));

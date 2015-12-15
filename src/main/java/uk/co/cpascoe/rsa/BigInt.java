@@ -38,6 +38,11 @@ public class BigInt implements Comparable<BigInt> {
     public BigInt(int numBits, Random random) {
     }
 
+    public int digitCount() {
+        // TODO: Needs to look for largest non-zero value
+        return this.digits.length;
+    }
+
     public int bitCount() {
         for (int i = (this.digits.length * 32) - 1; i >= 0; i--) {
             if (this.getBitAt(i) > 0) {
