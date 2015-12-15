@@ -36,15 +36,44 @@ public class UtilsTests {
     }
 
     @Test
-    public void intToBytes() {
-        assertArrayEquals(new byte[] {0,0,0,0}, Utils.intToBytes(0));
-        assertArrayEquals(new byte[] {0,0,0,1}, Utils.intToBytes(1));
-        assertArrayEquals(new byte[] {0,0,1,0}, Utils.intToBytes(256));
-        assertArrayEquals(new byte[] {0,0,1,1}, Utils.intToBytes(257));
-        assertArrayEquals(new byte[] {0,0,2,0}, Utils.intToBytes(512));
-        assertArrayEquals(new byte[] {0,0,(byte)255,(byte)255}, Utils.intToBytes(65535));
-        assertArrayEquals(new byte[] {1,0,0,0}, Utils.intToBytes(16777216));
-        assertArrayEquals(new byte[] {(byte)255,(byte)255,(byte)255,(byte)255}, Utils.intToBytes(-1));
+    public void intToBigEndianBytes() {
+        assertArrayEquals(new byte[] {0,0,0,0}, Utils.intToBigEndianBytes(0));
+        assertArrayEquals(new byte[] {0,0,0,1}, Utils.intToBigEndianBytes(1));
+        assertArrayEquals(new byte[] {0,0,1,0}, Utils.intToBigEndianBytes(256));
+        assertArrayEquals(new byte[] {0,0,1,1}, Utils.intToBigEndianBytes(257));
+        assertArrayEquals(new byte[] {0,0,2,0}, Utils.intToBigEndianBytes(512));
+        assertArrayEquals(new byte[] {0,0,(byte)255,(byte)255}, Utils.intToBigEndianBytes(65535));
+        assertArrayEquals(new byte[] {1,0,0,0}, Utils.intToBigEndianBytes(16777216));
+        assertArrayEquals(new byte[] {(byte)255,(byte)255,(byte)255,(byte)255}, Utils.intToBigEndianBytes(-1));
+    }
+
+    @Test
+    public void unsignedByte() {
+        assertEquals(0, Utils.unsignedByte((byte)0));
+        assertEquals(1, Utils.unsignedByte((byte)1));
+        assertEquals(127, Utils.unsignedByte((byte)127));
+        assertEquals(128, Utils.unsignedByte((byte)128));
+        assertEquals(255, Utils.unsignedByte((byte)255));
+    }
+
+    @Test
+    public void bigEndianBytesToInt() {
+        assertEquals(0, Utils.bigEndianBytesToInt(new byte[] {0,0,0,0}));
+        assertEquals(1, Utils.bigEndianBytesToInt(new byte[] {0,0,0,1}));
+        assertEquals(255, Utils.bigEndianBytesToInt(new byte[] {0,0,0,(byte)255}));
+        assertEquals(256, Utils.bigEndianBytesToInt(new byte[] {0,0,1,0}));
+        assertEquals(257, Utils.bigEndianBytesToInt(new byte[] {0,0,1,1}));
+        assertEquals(16909060, Utils.bigEndianBytesToInt(new byte[] {1,2,3,4}));
+    }
+
+    @Test
+    public void littleEndianBytesToInt() {
+        assertEquals(0, Utils.littleEndianBytesToInt(new byte[] {0,0,0,0}));
+        assertEquals(1, Utils.littleEndianBytesToInt(new byte[] {1,0,0,0}));
+        assertEquals(255, Utils.littleEndianBytesToInt(new byte[] {(byte)255,0,0,0}));
+        assertEquals(256, Utils.littleEndianBytesToInt(new byte[] {0,1,0,0}));
+        assertEquals(257, Utils.littleEndianBytesToInt(new byte[] {1,1,0,0}));
+        assertEquals(16909060, Utils.littleEndianBytesToInt(new byte[] {4,3,2,1}));
     }
 
     @Test

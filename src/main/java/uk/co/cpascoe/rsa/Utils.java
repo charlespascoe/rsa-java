@@ -22,7 +22,7 @@ public abstract class Utils {
      *
      * @return A byte array of length 4
      */
-    public static byte[] intToBytes(int value) {
+    public static byte[] intToBigEndianBytes(int value) {
         byte[] data = new byte[4];
 
         int mask = 255;
@@ -33,6 +33,44 @@ public abstract class Utils {
         }
 
         return data;
+    }
+
+    public static int unsignedByte(byte value) {
+        return value < 0 ? value + 256 : value;
+    }
+
+    /**
+     * Returns the integer represented by the big-endian byte array passed in
+     */
+    public static int bigEndianBytesToInt(byte[] data) {
+        if (data.length != 4) {
+            throw new Error("data must have a length of 4");
+        }
+
+        int value = 0;
+
+        for (int i = 0; i < 4; i++) {
+            value = (value << 8) + Utils.unsignedByte(data[i]);
+        }
+
+        return value;
+    }
+
+    /**
+     * Returns the integer represented by the big-endian byte array passed in
+     */
+    public static int littleEndianBytesToInt(byte[] data) {
+        if (data.length != 4) {
+            throw new Error("data must have a length of 4");
+        }
+
+        int value = 0;
+
+        for (int i = 3; i >= 0; i--) {
+            value = (value << 8) + Utils.unsignedByte(data[i]);
+        }
+
+        return value;
     }
 
     /**
