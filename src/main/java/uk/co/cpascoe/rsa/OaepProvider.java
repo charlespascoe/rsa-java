@@ -21,6 +21,10 @@ public class OaepProvider {
         this.digestLength = MessageDigest.getInstance(digestName).getDigestLength();
     }
 
+    public int getDigestLength() {
+        return this.digestLength;
+    }
+
     public int maxMessageLength(int keylength) {
         return keylength - 2*maskGen.getDigestLength() - 2;
     }
