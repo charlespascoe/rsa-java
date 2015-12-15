@@ -1,6 +1,7 @@
 package uk.co.cpascoe.rsa;
 
 import java.util.regex.Pattern;
+import java.util.Arrays;
 
 public abstract class Utils {
     /**
@@ -74,5 +75,19 @@ public abstract class Utils {
         }
 
         return out;
+    }
+
+    /**
+     * Returns the first n bytes of the input array
+     */
+    public static byte[] takeBytes(byte[] input, int count) {
+        return Arrays.copyOf(input, count);
+    }
+
+    /**
+     * Returns the input array without the first n bytes
+     */
+    public static byte[] removeBytes(byte[] input, int count) {
+        return Arrays.copyOfRange(input, count, input.length);
     }
 }

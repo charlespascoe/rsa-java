@@ -84,5 +84,20 @@ public class UtilsTests {
         assertArrayEquals(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, Utils.concat(new byte[] { 1, 2, 3 }, new byte[] { 4, 5, 6 }, new byte[] { 7, 8, 9 }));
     }
 
+    @Test
+    public void takeBytes() {
+        assertArrayEquals(new byte[0], Utils.takeBytes(new byte[0], 0));
+        assertArrayEquals(new byte[0], Utils.takeBytes(new byte[16], 0));
+        assertArrayEquals(new byte[8], Utils.takeBytes(new byte[16], 8));
+        assertArrayEquals(new byte[] {1,2,3,4}, Utils.takeBytes(new byte[] {1,2,3,4,5,6,7,8}, 4));
+        assertArrayEquals(new byte[8], Utils.takeBytes(new byte[4], 8));
+    }
+
+    @Test
+    public void removeBytes() {
+        assertArrayEquals(new byte[0], Utils.removeBytes(new byte[0], 0));
+        assertArrayEquals(new byte[] {4,5,6,7,8}, Utils.removeBytes(new byte[] {1,2,3,4,5,6,7,8}, 3));
+    }
+
 }
 
