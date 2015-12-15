@@ -60,6 +60,14 @@ public class BigInt implements Comparable<BigInt> {
         return (this.digits[digitIndex] & (1 << bitIndex)) == 0 ? 0 : 1;
     }
 
+    public int getDigit(int index) {
+        if (index >= 0 && index < this.digits.length) {
+            return this.digits[index];
+        }
+
+        return 0;
+    }
+
     public BigInt add(BigInt y) {
         return null;
     }

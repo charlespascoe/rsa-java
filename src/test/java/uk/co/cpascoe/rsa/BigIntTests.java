@@ -53,5 +53,12 @@ public class BigIntTests {
         assertEquals(0, new BigInt(3).getLowestSetBit());
         assertEquals(7, new BigInt(128).getLowestSetBit());
     }
+
+    @Test
+    public void getDigit() {
+        assertEquals("It should return 0 for an out-of-range index", 0, new BigInt(1).getDigit(1024));
+        assertEquals("It should return the digit for a valid index", 1, new BigInt(1).getDigit(0));
+
+    }
 }
 
