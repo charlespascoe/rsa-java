@@ -77,6 +77,10 @@ public abstract class Utils {
         return value;
     }
 
+    public static int unsignedIntCompare(int a, int b) {
+        return Long.compare(Utils.unsignedInt(a), Utils.unsignedInt(b));
+    }
+
     /**
      * Returns the result of the two byte arrays xored together
      *
