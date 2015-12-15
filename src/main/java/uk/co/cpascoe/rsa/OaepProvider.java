@@ -86,6 +86,25 @@ public class OaepProvider {
             throw new Exception("keySize too small");
         }
 
-        return null;
+        byte[] maskedSeed = Utils.takeBytes(encMsgBlock, this.getDigestLength());
+        byte[] maskedDataBlock = Utils.removeBytes(encMsgBlock, this.getDigestLength());
+
+        byte[] seed = Utils.xorBytes(maskedSeed, this.maskGen.generateMask(maskedDataBlock, maskedSeed.length));
+        byte[] dataBlock = Utils.xorBytes(maskedDataBlock, this.maskGen.generateMask(seed, maskedDataBlock.length));
+
+        byte[] decodedLabelHash = Utils.takeBytes(dataBlock, this.getDigestLength());
+        byte[] decodedPaddedMessage = Utils.removeBytes(dataBlock, this.getDigestLength());
+
+        return OaepProvider.removePadding(decodedPaddedMessage);
+    }
+
+    public static byte[] removePadding(byte[] paddedMessage) {
+        for (int i = 0; i < paddedMessage.length; i++) {
+            if (paddedMessage[i] == 1) {
+                return Utils.removeBytes(paddedMessage, i + 1);
+            }
+        }
+
+        return new byte[0];
     }
 }
