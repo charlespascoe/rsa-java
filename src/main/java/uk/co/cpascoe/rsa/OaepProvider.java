@@ -76,4 +76,16 @@ public class OaepProvider {
 
         return Utils.concat(labelHash, padding, new byte[] {1}, msg);
     }
+
+    public byte[] decode(byte[] encMsgBlock, int keySize, byte[] label, boolean labelIsHash) throws Exception {
+        if (encMsgBlock.length != keySize - 1) {
+            throw new Exception("encMsgBlock length must be equal to keySize - 1");
+        }
+
+        if (keySize < (2*this.getDigestLength() + 2)) {
+            throw new Exception("keySize too small");
+        }
+
+        return null;
+    }
 }
