@@ -39,6 +39,10 @@ public abstract class Utils {
         return value < 0 ? value + 256 : value;
     }
 
+    public static long unsignedInt(int value) {
+        return value < 0 ? value + Constants.TWO_POW_32 : value;
+    }
+
     /**
      * Returns the integer represented by the big-endian byte array passed in
      */
