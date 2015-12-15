@@ -126,5 +126,15 @@ public class BigIntTests {
         assertArrayEquals("Multi-digit product should be correct", new int[] {0,2,4}, a.multiply(c).exportToIntArray());
     }
 
+    @Test
+    public void compareTo() {
+        assertTrue(new BigInt(5).compareTo(new BigInt(6)) < 0);
+        assertTrue(new BigInt(5).compareTo(new BigInt(5)) == 0);
+        assertTrue(new BigInt(5).compareTo(new BigInt(4)) > 0);
+        assertTrue(new BigInt(new int[] {1,2}).compareTo(new BigInt(new int[] {2,2})) < 0);
+        assertTrue(new BigInt(new int[] {1,2}).compareTo(new BigInt(new int[] {1,2})) == 0);
+        assertTrue(new BigInt(new int[] {1,2}).compareTo(new BigInt(new int[] {0,2})) > 0);
+        assertTrue(new BigInt(new int[] {1,2}).compareTo(new BigInt(new int[] {(int)4294967295L,2})) < 0);
+    }
 }
 

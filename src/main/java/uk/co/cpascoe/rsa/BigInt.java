@@ -188,6 +188,15 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public int compareTo(BigInt other) {
+        int diff = this.bitCount() - other.bitCount();
+
+        if (diff != 0) return diff;
+
+        for (int i = 0; i < this.digitCount(); i++) {
+            diff = Utils.unsignedIntCompare(this.getDigit(i), other.getDigit(i));
+            if (diff != 0) return diff;
+        }
+
         return 0;
     }
 
