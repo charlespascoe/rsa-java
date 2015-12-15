@@ -100,5 +100,14 @@ public class BigIntTests {
         x.addToDigit(1, 0);
         assertArrayEquals("Carries 1 on overflow", new int[] {0,1}, x.exportToIntArray());
     }
+
+    @Test public void add() {
+        BigInt x = new BigInt(1);
+        BigInt y = new BigInt(2);
+        BigInt z = new BigInt((int)4294967295L);
+
+        assertArrayEquals("Correctly adds two single-digit BigInts", new int[] {3}, x.add(y).exportToIntArray());
+        assertArrayEquals("Correctly adds two BigInts, resulting in a carry", new int[] {0,1}, x.add(z).exportToIntArray());
+    }
 }
 

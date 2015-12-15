@@ -3,6 +3,7 @@ package uk.co.cpascoe.rsa;
 import java.util.Random;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.lang.Math;
 
 public class BigInt implements Comparable<BigInt> {
     private int[] digits;
@@ -103,7 +104,13 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public BigInt add(BigInt y) {
-        return null;
+        BigInt result = new BigInt(this.digits);
+
+        for (int i = 0; i < y.digitCount(); i++) {
+            result.addToDigit(y.getDigit(i), i);
+        }
+
+        return result;
     }
 
     public BigInt subtract(BigInt y) {
