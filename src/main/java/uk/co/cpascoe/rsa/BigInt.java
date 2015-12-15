@@ -5,10 +5,10 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 public class BigInt implements Comparable<BigInt> {
-    private int[] num;
+    private int[] digits;
 
     public BigInt(int value) {
-        this.num = new int[] {value};
+        this.digits = new int[] {value};
     }
 
     /**
@@ -17,10 +17,10 @@ public class BigInt implements Comparable<BigInt> {
     public BigInt(byte[] data) {
         int digit = 0;
 
-        this.num = new int[(data.length + 3) / 4];
+        this.digits = new int[(data.length + 3) / 4];
 
-        for (int i = 0; i < this.num.length; i++) {
-            this.num[i] = Utils.littleEndianBytesToInt(Arrays.copyOfRange(data, i * 4, (i + 1) * 4));
+        for (int i = 0; i < this.digits.length; i++) {
+            this.digits[i] = Utils.littleEndianBytesToInt(Arrays.copyOfRange(data, i * 4, (i + 1) * 4));
         }
     }
 
@@ -35,7 +35,7 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public int bitCount() {
-        for (int i = (this.num.length * 32) - 1; i >= 0; i--) {
+        for (int i = (this.digits.length * 32) - 1; i >= 0; i--) {
             if (this.getBitAt(i) > 0) {
                 return i + 1;
             }
@@ -45,7 +45,7 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public int getLowestSetBit() {
-        for (int i = 0; i < (this.num.length * 32); i++) {
+        for (int i = 0; i < (this.digits.length * 32); i++) {
             if (this.getBitAt(i) > 0) {
                 return i;
             }
@@ -57,7 +57,7 @@ public class BigInt implements Comparable<BigInt> {
     public int getBitAt(int bit) {
         int digitIndex = bit / 32;
         int bitIndex = bit % 32;
-        return (this.num[digitIndex] & (1 << bitIndex)) == 0 ? 0 : 1;
+        return (this.digits[digitIndex] & (1 << bitIndex)) == 0 ? 0 : 1;
     }
 
     public BigInt add(BigInt y) {
@@ -125,7 +125,7 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public int[] exportToIntArray() {
-        return Arrays.copyOf(this.num, this.num.length);
+        return Arrays.copyOf(this.digits, this.digits.length);
     }
 }
 
