@@ -35,11 +35,29 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public int bitCount() {
+        for (int i = (this.num.length * 32) - 1; i >= 0; i--) {
+            if (this.getBitAt(i) > 0) {
+                return i + 1;
+            }
+        }
+
         return 0;
     }
 
     public int getLowestSetBit() {
-        return 0;
+        for (int i = 0; i < (this.num.length * 32); i++) {
+            if (this.getBitAt(i) > 0) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public int getBitAt(int bit) {
+        int digitIndex = bit / 32;
+        int bitIndex = bit % 32;
+        return (this.num[digitIndex] & (1 << bitIndex)) == 0 ? 0 : 1;
     }
 
     public BigInt add(BigInt y) {
