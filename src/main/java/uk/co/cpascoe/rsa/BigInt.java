@@ -68,6 +68,15 @@ public class BigInt implements Comparable<BigInt> {
         return 0;
     }
 
+    public void setDigit(int digit, int index) {
+        if (index < 0) return;
+        if (index > this.digits.length) {
+            this.digits = Arrays.copyOf(this.digits, index + 1);
+        }
+
+        this.digits[index] = digit;
+    }
+
     public BigInt add(BigInt y) {
         return null;
     }

@@ -58,7 +58,16 @@ public class BigIntTests {
     public void getDigit() {
         assertEquals("It should return 0 for an out-of-range index", 0, new BigInt(1).getDigit(1024));
         assertEquals("It should return the digit for a valid index", 1, new BigInt(1).getDigit(0));
+    }
 
+    @Test
+    public void setDigit() {
+        BigInt x = new BigInt(0);
+        x.setDigit(123, 0);
+        assertEquals(123, x.getDigit(0));
+
+        x.setDigit(7, 1000);
+        assertEquals(7, x.getDigit(1000));
     }
 }
 
