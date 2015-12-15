@@ -66,6 +66,9 @@ public class BigIntTests {
         x.setDigit(123, 0);
         assertEquals(123, x.getDigit(0));
 
+        x.setDigit(456, 1);
+        assertEquals(456, x.getDigit(1));
+
         x.setDigit(7, 1000);
         assertEquals(7, x.getDigit(1000));
     }

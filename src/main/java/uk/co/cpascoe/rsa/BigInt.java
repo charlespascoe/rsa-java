@@ -70,7 +70,7 @@ public class BigInt implements Comparable<BigInt> {
 
     public void setDigit(int digit, int index) {
         if (index < 0) return;
-        if (index > this.digits.length) {
+        if (index >= this.digits.length) {
             this.digits = Arrays.copyOf(this.digits, index + 1);
         }
 
