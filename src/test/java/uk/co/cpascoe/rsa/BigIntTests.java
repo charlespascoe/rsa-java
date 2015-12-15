@@ -101,7 +101,8 @@ public class BigIntTests {
         assertArrayEquals("Carries 1 on overflow", new int[] {0,1}, x.exportToIntArray());
     }
 
-    @Test public void add() {
+    @Test
+    public void add() {
         BigInt x = new BigInt(1);
         BigInt y = new BigInt(2);
         BigInt z = new BigInt((int)4294967295L);
@@ -109,5 +110,21 @@ public class BigIntTests {
         assertArrayEquals("Correctly adds two single-digit BigInts", new int[] {3}, x.add(y).exportToIntArray());
         assertArrayEquals("Correctly adds two BigInts, resulting in a carry", new int[] {0,1}, x.add(z).exportToIntArray());
     }
+
+    @Test
+    public void multiply() {
+        BigInt x = new BigInt(2);
+        BigInt y = new BigInt(3);
+
+        assertArrayEquals("Single-digit product should be correct", new int[] {6}, x.multiply(y).exportToIntArray());
+
+        BigInt a = new BigInt(new int[] {0,2});
+        BigInt b = new BigInt(new int[] {0,5});
+        BigInt c = new BigInt(new int[] {1,2});
+
+        assertArrayEquals("Multi-digit product should be correct", new int[] {0,0,10}, a.multiply(b).exportToIntArray());
+        assertArrayEquals("Multi-digit product should be correct", new int[] {0,2,4}, a.multiply(c).exportToIntArray());
+    }
+
 }
 

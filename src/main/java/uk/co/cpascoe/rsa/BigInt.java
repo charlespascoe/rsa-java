@@ -118,7 +118,25 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public BigInt multiply(BigInt y) {
-        return null;
+        BigInt result = new BigInt(0);
+
+        long intMask = Constants.TWO_POW_32 - 1;
+
+        for (int i = 0; i < this.digitCount(); i++) {
+            for (int j = 0; j < y.digitCount(); j++) {
+                long product = Utils.unsignedInt(this.getDigit(i)) * Utils.unsignedInt(y.getDigit(j));
+
+                int digit1 = (int)(product & intMask);
+                int digit2 = (int)((product >> 32) & intMask);
+
+                result.addToDigit(digit1, i + j);
+
+                if (digit2 != 0)
+                    result.addToDigit(digit2, i + j + 1);
+            }
+        }
+
+        return result;
     }
 
     public BigInt divide(BigInt y) {
