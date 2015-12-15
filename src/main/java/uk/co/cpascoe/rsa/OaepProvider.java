@@ -34,6 +34,10 @@ public class OaepProvider {
     }
 
     public byte[] encode(byte[] msg, int keyLength, byte[] label, boolean labelIsHash) throws Exception {
+        return this.encode(msg, keyLength, label, labelIsHash, new SecureRandom().generateSeed(this.digestLength));
+    }
+
+    public byte[] encode(byte[] msg, int keyLength, byte[] label, boolean labelIsHash, byte[] seed) throws Exception {
         if (msg.length > this.maxMessageLength(keyLength)) {
             throw new Exception("Message too long");
         }
@@ -50,8 +54,7 @@ public class OaepProvider {
             labelHash = MessageDigest.getInstance(this.digestName).digest(label);
         }
 
-        byte[] dataBlock = OaepProvider.buildDataBlock(labelHash, msg, keyLength, this.maxMessageLength(keyLength));
-        byte[] seed = new SecureRandom().generateSeed(this.digestLength);
+        byte[] dataBlock = OaepProvider.buildDataBlock(labelHash, msg, this.maxMessageLength(keyLength));
 
         byte[] maskedDataBlock = Utils.xorBytes(dataBlock, this.maskGen.generateMask(seed, dataBlock.length));
         byte[] maskedSeed = Utils.xorBytes(seed, this.maskGen.generateMask(maskedDataBlock, seed.length));
@@ -59,28 +62,14 @@ public class OaepProvider {
         return Utils.concat(maskedDataBlock, maskedSeed);
     }
 
-    public static byte[] buildDataBlock(byte[] labelHash, byte[] msg, int keyLength, int maxMessageLength) throws Exception {
+    public static byte[] buildDataBlock(byte[] labelHash, byte[] msg, int maxMessageLength) throws Exception {
         if (msg.length > maxMessageLength) {
             throw new Exception("Message too long");
         }
 
         int paddingLength = maxMessageLength - msg.length;
-        int blockLength = labelHash.length + paddingLength + 1 + msg.length;
+        byte[] padding = new byte[paddingLength];
 
-        byte[] dataBlock = new byte[blockLength];
-
-        int position = 0;
-        System.arraycopy(labelHash, 0, dataBlock, position, labelHash.length);
-        position += labelHash.length;
-
-        // Add 0 padding
-        position += paddingLength;
-
-        dataBlock[position] = 1;
-        position++;
-
-        System.arraycopy(msg, 0, dataBlock, position, msg.length);
-
-        return dataBlock;
+        return Utils.concat(labelHash, padding, new byte[] {1}, msg);
     }
 }
