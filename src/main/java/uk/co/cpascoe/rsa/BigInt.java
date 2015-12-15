@@ -11,6 +11,10 @@ public class BigInt implements Comparable<BigInt> {
         this.digits = new int[] {value};
     }
 
+    public BigInt(int[] digits) {
+        this.digits = Arrays.copyOf(digits, digits.length);
+    }
+
     /**
      * Creates new new instance of a BigInt using the given little-endian byte array
      */

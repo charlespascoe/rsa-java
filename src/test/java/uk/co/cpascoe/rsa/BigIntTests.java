@@ -23,6 +23,17 @@ public class BigIntTests {
     }
 
     @Test
+    public void createFromIntArray() {
+        assertArrayEquals(new int[] {0}, new BigInt(new int[] {0}).exportToIntArray());
+        assertArrayEquals(new int[] {1}, new BigInt(new int[] {1}).exportToIntArray());
+        assertArrayEquals(new int[] {256}, new BigInt(new int[] {256}).exportToIntArray());
+        assertArrayEquals(new int[] {(int)4294967295L}, new BigInt(new int[] {(int)4294967295L}).exportToIntArray());
+        assertArrayEquals(new int[] {0,1}, new BigInt(new int[] {0,1}).exportToIntArray());
+        assertArrayEquals(new int[] {0,(int)4294967295L}, new BigInt(new int[] {0,(int)4294967295L}).exportToIntArray());
+        assertArrayEquals(new int[] {1,2,3,4}, new BigInt(new int[] {1,2,3,4}).exportToIntArray());
+    }
+
+    @Test
     public void getBitAt() {
         assertEquals(0, new BigInt(0).getBitAt(0));
         assertEquals(1, new BigInt(1).getBitAt(0));
