@@ -72,5 +72,16 @@ public class BigIntTests {
         x.setDigit(7, 1000);
         assertEquals(7, x.getDigit(1000));
     }
+
+    @Test
+    public void addToDigit() {
+        BigInt x = new BigInt(1);
+        x.addToDigit(2, 0);
+        assertEquals("Correctly increments a single digit", 3, x.getDigit(0));
+
+        x.setDigit((int)4294967295L, 0);
+        x.addToDigit(1, 0);
+        assertArrayEquals("Carries 1 on overflow", new int[] {0,1}, x.exportToIntArray());
+    }
 }
 

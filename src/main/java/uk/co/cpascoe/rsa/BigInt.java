@@ -77,6 +77,22 @@ public class BigInt implements Comparable<BigInt> {
         this.digits[index] = digit;
     }
 
+    public void addToDigit(int digit, int index) {
+        boolean carry = false;
+        long unsignedDigit = Utils.unsignedInt(digit);
+        long unsignedCurrentDigit = Utils.unsignedInt(this.getDigit(index));
+        long sum = unsignedDigit + unsignedCurrentDigit;
+
+        if (sum >= Constants.TWO_POW_32) {
+            sum %= Constants.TWO_POW_32;
+            carry = true;
+        }
+
+        this.setDigit((int)sum, index);
+
+        if (carry) this.addToDigit(1, index + 1);
+    }
+
     public BigInt add(BigInt y) {
         return null;
     }
