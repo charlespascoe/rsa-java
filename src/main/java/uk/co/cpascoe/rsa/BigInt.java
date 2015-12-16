@@ -41,7 +41,7 @@ public class BigInt implements Comparable<BigInt> {
 
     public int digitCount() {
         for (int i = this.digits.length - 1; i >= 0; i--) {
-            if (this.digits[i] > 0) {
+            if (this.digits[i] != 0) {
                 return i + 1;
             }
         }
