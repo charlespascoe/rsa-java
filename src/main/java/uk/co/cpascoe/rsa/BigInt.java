@@ -168,36 +168,36 @@ public class BigInt implements Comparable<BigInt> {
         if (carry) this.subtractFromDigit(1, index + 1);
     }
 
-    public BigInt add(BigInt y) {
+    public BigInt add(BigInt other) {
         BigInt result = new BigInt(this.digits);
 
-        for (int i = 0; i < y.digitCount(); i++) {
-            result.addToDigit(y.getDigit(i), i);
+        for (int i = 0; i < other.digitCount(); i++) {
+            result.addToDigit(other.getDigit(i), i);
         }
 
         return result;
     }
 
-    public BigInt subtract(BigInt y) {
-        if (this.lessThan(y)) throw new Error("Cannot subtract a number from a smaller number (yet)");
+    public BigInt subtract(BigInt other) {
+        if (this.lessThan(other)) throw new Error("Cannot subtract a number from a smaller number (yet)");
 
         BigInt result = new BigInt(this.digits);
 
-        for (int i = 0; i < y.digitCount(); i++) {
-            result.subtractFromDigit(y.getDigit(i), i);
+        for (int i = 0; i < other.digitCount(); i++) {
+            result.subtractFromDigit(other.getDigit(i), i);
         }
 
         return result;
     }
 
-    public BigInt multiply(BigInt y) {
+    public BigInt multiply(BigInt other) {
         BigInt result = new BigInt(0);
 
         long intMask = Constants.TWO_POW_32 - 1;
 
         for (int i = 0; i < this.digitCount(); i++) {
-            for (int j = 0; j < y.digitCount(); j++) {
-                long product = Utils.unsignedInt(this.getDigit(i)) * Utils.unsignedInt(y.getDigit(j));
+            for (int j = 0; j < other.digitCount(); j++) {
+                long product = Utils.unsignedInt(this.getDigit(i)) * Utils.unsignedInt(other.getDigit(j));
 
                 int digit1 = (int)(product & intMask);
                 int digit2 = (int)((product >> 32) & intMask);
@@ -229,13 +229,13 @@ public class BigInt implements Comparable<BigInt> {
         return Arrays.copyOf(this.powerOf2Multiples, n);
     }
 
-    public BigInt.DivisionResult divide(BigInt y) {
-        if (this.lessThan(y)) return new BigInt.DivisionResult(new BigInt(0), this);
+    public BigInt.DivisionResult divide(BigInt divisor) {
+        if (this.lessThan(divisor)) return new BigInt.DivisionResult(new BigInt(0), this);
 
         BigInt remainder = new BigInt(this.exportToIntArray());
         BigInt quotient = new BigInt(0);
 
-        BigInt[] pow2Multiples = y.getPowerOf2Multiples(this.bitCount() - y.bitCount() + 1);
+        BigInt[] pow2Multiples = divisor.getPowerOf2Multiples(this.bitCount() - divisor.bitCount() + 1);
 
         for (int i = pow2Multiples.length - 1; i >= 0; i--) {
             if (remainder.greaterThanOrEqual(pow2Multiples[i])) {
@@ -247,12 +247,12 @@ public class BigInt implements Comparable<BigInt> {
         return new BigInt.DivisionResult(quotient, remainder);
     }
 
-    public BigInt quotient(BigInt y) {
-        return this.divide(y).quotient();
+    public BigInt quotient(BigInt divisor) {
+        return this.divide(divisor).quotient();
     }
 
-    public BigInt mod(BigInt y) {
-        return this.divide(y).remainder();
+    public BigInt mod(BigInt modulus) {
+        return this.divide(modulus).remainder();
     }
 
     public BigInt pow(BigInt exponent) {
