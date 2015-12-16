@@ -54,6 +54,7 @@ public class BigIntTests {
         assertEquals(0, new BigInt(2).getBitAt(0));
         assertEquals(1, new BigInt(2).getBitAt(1));
         assertEquals(1, new BigInt(256).getBitAt(8));
+        assertEquals(0, new BigInt(1).getBitAt(1000));
     }
 
     @Test

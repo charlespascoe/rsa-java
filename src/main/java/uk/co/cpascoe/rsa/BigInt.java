@@ -83,10 +83,9 @@ public class BigInt implements Comparable<BigInt> {
         return -1;
     }
 
-    public int getBitAt(int bit) {
-        int digitIndex = bit / 32;
-        int bitIndex = bit % 32;
-        return (this.digits[digitIndex] & (1 << bitIndex)) == 0 ? 0 : 1;
+    public int getBitAt(int bitIndex) {
+        int digitIndex = bitIndex / 32;
+        return (this.getDigit(digitIndex) & (1 << (bitIndex % 32))) == 0 ? 0 : 1;
     }
 
     public void setBitAt(int value, int bitIndex) {
