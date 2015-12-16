@@ -283,24 +283,6 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
-    public static BigInt randomBigInt(int bits, Random random) {
-        return null;
-    }
-
-    public static BigInt randomBigInt(BigInt lowerLimit, BigInt upperLimit, Random random) {
-        BigInt x;
-
-        do {
-            x = BigInt.randomBigInt(upperLimit.bitCount(), random);
-        } while (x.compareTo(lowerLimit) < 0 || x.compareTo(upperLimit) > 0);
-
-        return x;
-    }
-
-    public static BigInt generateProbablePrime(int bits) {
-        return null;
-    }
-
     public boolean isProbablePrime(int certainty) {
         return false;
 
