@@ -92,6 +92,24 @@ public class BigInt implements Comparable<BigInt> {
         this.digits[index] = digit;
     }
 
+    public BigInt shiftDigits(int shift) {
+        if (this.digitCount() + shift <= 0) return new BigInt(0);
+
+        int[] newDigits = new int[this.digitCount() + shift];
+
+        if (shift >= 0) {
+            for (int i = 0; i < this.digitCount(); i++) {
+                newDigits[i + shift] = this.getDigit(i);
+            }
+        } else {
+            for (int i = 0; i < newDigits.length; i++) {
+                newDigits[i] = this.getDigit(i - shift);
+            }
+        }
+
+        return new BigInt(newDigits);
+    }
+
     public void addToDigit(int digit, int index) {
         boolean carry = false;
         long unsignedDigit = Utils.unsignedInt(digit);

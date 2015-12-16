@@ -97,6 +97,14 @@ public class BigIntTests {
     }
 
     @Test
+    public void shiftDigits() {
+        assertArrayEquals(new int[] {0,1}, new BigInt(1).shiftDigits(1).exportToIntArray());
+        assertArrayEquals(new int[] {0,0,1}, new BigInt(1).shiftDigits(2).exportToIntArray());
+        assertArrayEquals(new int[] {1}, new BigInt(new int[] {0,1}).shiftDigits(-1).exportToIntArray());
+        assertArrayEquals(new int[] {0,1}, new BigInt(new int[] {0,0,0,1}).shiftDigits(-2).exportToIntArray());
+    }
+
+    @Test
     public void addToDigit() {
         BigInt x = new BigInt(1);
         x.addToDigit(2, 0);
