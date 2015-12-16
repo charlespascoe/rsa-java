@@ -57,6 +57,21 @@ public class BigIntTests {
     }
 
     @Test
+    public void setBitAt() {
+        BigInt x = new BigInt(2);
+        x.setBitAt(1, 0);
+        assertArrayEquals(new int[] {3}, x.exportToIntArray());
+
+        x.setBitAt(0, 1);
+        assertArrayEquals(new int[] {1}, x.exportToIntArray());
+
+        x.setBitAt(1, 16);
+        assertArrayEquals(new int[] {65537}, x.exportToIntArray());
+        x.setBitAt(1, 16);
+        assertArrayEquals("Setting a set bit should not change the value", new int[] {65537}, x.exportToIntArray());
+    }
+
+    @Test
     public void bitCount() {
         assertEquals(0, new BigInt(0).bitCount());
         assertEquals(1, new BigInt(1).bitCount());

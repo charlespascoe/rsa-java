@@ -75,6 +75,17 @@ public class BigInt implements Comparable<BigInt> {
         return (this.digits[digitIndex] & (1 << bitIndex)) == 0 ? 0 : 1;
     }
 
+    public void setBitAt(int value, int bitIndex) {
+        if (value != 0) value = 1;
+
+        int digit = this.getDigit(bitIndex / 32);
+        int bit = (digit & Constants.BIT_MASKS[bitIndex % 32]) == 0 ? 0 : 1;
+
+        if (bit != value) {
+            this.setDigit(digit ^ Constants.BIT_MASKS[bitIndex % 32], bitIndex / 32);
+        }
+    }
+
     public int getDigit(int index) {
         if (index >= 0 && index < this.digits.length) {
             return this.digits[index];
