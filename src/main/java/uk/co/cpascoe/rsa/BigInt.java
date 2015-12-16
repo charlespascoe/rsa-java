@@ -250,7 +250,7 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public int[] exportToIntArray() {
-        return Arrays.copyOf(this.digits, this.digits.length);
+        return Arrays.copyOf(this.digits, this.digitCount());
     }
 }
 
