@@ -137,6 +137,15 @@ public class BigIntTests {
     }
 
     @Test
+    public void subtract() {
+        assertArrayEquals(new int[] {5}, new BigInt(8).subtract(new BigInt(3)).exportToIntArray());
+
+        BigInt x = new BigInt(new int[] {0,10});
+        BigInt y = new BigInt(new int[] {1,8});
+        assertArrayEquals(new int[] {(int)4294967295L,1}, x.subtract(y).exportToIntArray());
+    }
+
+    @Test
     public void multiply() {
         BigInt x = new BigInt(2);
         BigInt y = new BigInt(3);

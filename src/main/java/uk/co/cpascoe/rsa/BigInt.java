@@ -155,7 +155,15 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public BigInt subtract(BigInt y) {
-        return null;
+        if (this.compareTo(y) < 0) throw new Error("Cannot subtract a number from a smaller number (yet)");
+
+        BigInt result = new BigInt(this.digits);
+
+        for (int i = 0; i < y.digitCount(); i++) {
+            result.subtractFromDigit(y.getDigit(i), i);
+        }
+
+        return result;
     }
 
     public BigInt multiply(BigInt y) {
