@@ -126,6 +126,24 @@ public class BigInt implements Comparable<BigInt> {
         if (carry) this.addToDigit(1, index + 1);
     }
 
+    public void subtractFromDigit(int digit, int index) {
+        // N.B.: This will run forever if the digit to subtract is larger than the digit at this position
+        // and this digit is the highest-order digit
+        boolean carry = false;
+        long unsignedDigit = Utils.unsignedInt(digit);
+        long unsignedCurrentDigit = Utils.unsignedInt(this.getDigit(index));
+        long diff = unsignedCurrentDigit - unsignedDigit;
+
+        if (diff < 0) {
+            diff += Constants.TWO_POW_32;
+            carry = true;
+        }
+
+        this.setDigit((int)diff, index);
+
+        if (carry) this.subtractFromDigit(1, index + 1);
+    }
+
     public BigInt add(BigInt y) {
         BigInt result = new BigInt(this.digits);
 

@@ -116,6 +116,17 @@ public class BigIntTests {
     }
 
     @Test
+    public void subtractFromDigit() {
+        BigInt x = new BigInt(3);
+        x.subtractFromDigit(1, 0);
+        assertArrayEquals("Correctly subtracts from a single digit", new int[] {2}, x.exportToIntArray());
+
+        BigInt y = new BigInt(new int[] {0,0,3});
+        y.subtractFromDigit(1, 1);
+        assertArrayEquals("Subtracts 1 on underflow", new int[] {0,(int)4294967295L,2}, y.exportToIntArray());
+    }
+
+    @Test
     public void add() {
         BigInt x = new BigInt(1);
         BigInt y = new BigInt(2);
