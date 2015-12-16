@@ -183,7 +183,7 @@ public class BigIntTests {
 
         int p2 = 1;
         for (int i = 0; i < pow2Multiples.length; i++) {
-            assertEquals(0, pow2Multiples[i].compareTo(x.multiply(new BigInt(p2))));
+            assertTrue(pow2Multiples[i].equals(x.multiply(new BigInt(p2))));
             p2 *= 2;
         }
     }
