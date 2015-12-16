@@ -283,10 +283,6 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
-    public BigInt gcd(BigInt y) {
-        return null;
-    }
-
     public static BigInt randomBigInt(int bits, Random random) {
         return null;
     }
