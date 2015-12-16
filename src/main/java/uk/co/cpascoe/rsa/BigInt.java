@@ -256,12 +256,32 @@ public class BigInt implements Comparable<BigInt> {
         return this.divide(y).remainder();
     }
 
-    public BigInt pow(BigInt y) {
-        return null;
+    public BigInt pow(BigInt exponent) {
+        BigInt result = new BigInt(1);
+        BigInt base = this;
+
+        for (int i = 0; i < exponent.bitCount(); i++) {
+            if (exponent.getBitAt(i) == 1) {
+                result = result.multiply(base);
+            }
+            base = base.multiply(base);
+        }
+
+        return result;
     }
 
-    public BigInt powMod(BigInt y) {
-        return null;
+    public BigInt powMod(BigInt exponent, BigInt modulus) {
+        BigInt result = new BigInt(1);
+        BigInt base = this;
+
+        for (int i = 0; i < exponent.bitCount(); i++) {
+            if (exponent.getBitAt(i) == 1) {
+                result = result.multiply(base).mod(modulus);
+            }
+            base = base.multiply(base).mod(modulus);
+        }
+
+        return result;
     }
 
     public BigInt gcd(BigInt y) {

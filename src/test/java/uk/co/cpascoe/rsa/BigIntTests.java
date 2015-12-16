@@ -190,6 +190,9 @@ public class BigIntTests {
 
     @Test
     public void divide() {
+        // BigInt.quotient and BigInt.mod both depend on BigInt.divide,
+        // and so tests for quotient and mod aren't needed.
+
         BigInt.DivisionResult r = new BigInt(20).divide(new BigInt(2));
         assertArrayEquals("Single-digit division with no remainder", new int[] {10}, r.quotient().exportToIntArray());
         assertArrayEquals("Single-digit division with no remainder", new int[] {0}, r.remainder().exportToIntArray());
@@ -201,6 +204,20 @@ public class BigIntTests {
         BigInt.DivisionResult r3 = new BigInt(new int[] {0,0,1}).divide(new BigInt(new int[] {0,3}));
         assertArrayEquals("Multi-digit division with remainder", new int[] {1431655765}, r3.quotient().exportToIntArray());
         assertArrayEquals("Multi-digit division with remainder", new int[] {0,1}, r3.remainder().exportToIntArray());
+    }
+
+    @Test
+    public void pow() {
+        assertArrayEquals("Exponentiation with single digits", new int[] {128}, new BigInt(2).pow(new BigInt(7)).exportToIntArray());
+        assertArrayEquals("Exponentiation with multiple digits", new int[] {1024,25600,288000,1920000,8400000,25200000,52500000,75000000,70312500,39062500,9765625}, new BigInt(new int[] {2,5}).pow(new BigInt(new int[] {10})).exportToIntArray());
+    }
+
+    @Test
+    public void powMod() {
+        assertArrayEquals("Exponentiation with single digits", new int[] {6}, new BigInt(2).powMod(new BigInt(1000000), new BigInt(10)).exportToIntArray());
+        assertArrayEquals("Exponentiation with multiple digits", new int[] {1}, new BigInt(new int[] {(int)4294967295L,(int)4294967295L}).powMod(new BigInt(12345678), new BigInt(new int[] {0,0,1})).exportToIntArray());
+        assertArrayEquals("Exponentiation with multiple digits", new int[] {1313419847, -576389566, 2}, new BigInt(new int[] {2,5}).powMod(new BigInt(new int[] {1,2,3,4,5,6,7,8,9,10}), new BigInt(new int[] {1,2,3})).exportToIntArray());
+
     }
 
     @Test
