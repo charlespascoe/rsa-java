@@ -177,6 +177,33 @@ public class BigIntTests {
     }
 
     @Test
+    public void getPowerOf2Multiples() {
+        BigInt x = new BigInt(new int[] {1,2,3});
+        BigInt[] pow2Multiples = x.getPowerOf2Multiples(10);
+
+        int p2 = 1;
+        for (int i = 0; i < pow2Multiples.length; i++) {
+            assertEquals(0, pow2Multiples[i].compareTo(x.multiply(new BigInt(p2))));
+            p2 *= 2;
+        }
+    }
+
+    @Test
+    public void divide() {
+        BigInt.DivisionResult r = new BigInt(20).divide(new BigInt(2));
+        assertArrayEquals("Single-digit division with no remainder", new int[] {10}, r.quotient().exportToIntArray());
+        assertArrayEquals("Single-digit division with no remainder", new int[] {0}, r.remainder().exportToIntArray());
+
+        BigInt.DivisionResult r2 = new BigInt(23).divide(new BigInt(4));
+        assertArrayEquals("Single-digit division with remainder", new int[] {5}, r2.quotient().exportToIntArray());
+        assertArrayEquals("Single-digit division with remainder", new int[] {3}, r2.remainder().exportToIntArray());
+
+        BigInt.DivisionResult r3 = new BigInt(new int[] {0,0,1}).divide(new BigInt(new int[] {0,3}));
+        assertArrayEquals("Multi-digit division with remainder", new int[] {1431655765}, r3.quotient().exportToIntArray());
+        assertArrayEquals("Multi-digit division with remainder", new int[] {0,1}, r3.remainder().exportToIntArray());
+    }
+
+    @Test
     public void compareTo() {
         assertTrue(new BigInt(5).compareTo(new BigInt(6)) < 0);
         assertTrue(new BigInt(5).compareTo(new BigInt(5)) == 0);

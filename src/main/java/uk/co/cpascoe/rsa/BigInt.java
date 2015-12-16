@@ -6,7 +6,21 @@ import java.util.Arrays;
 import java.lang.Math;
 
 public class BigInt implements Comparable<BigInt> {
+    public static class DivisionResult {
+        private final BigInt quotient;
+        private final BigInt remainder;
+
+        public DivisionResult(BigInt q, BigInt r) {
+            this.quotient = q;
+            this.remainder = r;
+        }
+
+        public BigInt quotient() { return this.quotient; }
+        public BigInt remainder() { return this.remainder; }
+    }
+
     private int[] digits;
+    private BigInt[] powerOf2Multiples = null;
 
     public BigInt(int value) {
         this.digits = new int[] {value};
@@ -199,12 +213,47 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
-    public BigInt divide(BigInt y) {
-        return null;
+    public BigInt[] getPowerOf2Multiples(int n) {
+        if (this.powerOf2Multiples == null) {
+            this.powerOf2Multiples = new BigInt[] {this};
+        }
+
+        if (n > this.powerOf2Multiples.length) {
+            int prevLength = this.powerOf2Multiples.length;
+            this.powerOf2Multiples = Arrays.copyOf(this.powerOf2Multiples, n);
+
+            for (int i = prevLength; i < this.powerOf2Multiples.length; i++) {
+                this.powerOf2Multiples[i] = this.powerOf2Multiples[i - 1].multiply(new BigInt(2));
+            }
+        }
+
+        return Arrays.copyOf(this.powerOf2Multiples, n);
+    }
+
+    public BigInt.DivisionResult divide(BigInt y) {
+        if (this.compareTo(y) < 0) return new BigInt.DivisionResult(new BigInt(0), this);
+
+        BigInt remainder = new BigInt(this.exportToIntArray());
+        BigInt quotient = new BigInt(0);
+
+        BigInt[] pow2Multiples = y.getPowerOf2Multiples(this.bitCount() - y.bitCount() + 1);
+
+        for (int i = pow2Multiples.length - 1; i >= 0; i--) {
+            if (remainder.compareTo(pow2Multiples[i]) >= 0) {
+                remainder = remainder.subtract(pow2Multiples[i]);
+                quotient.setBitAt(1, i);
+            }
+        }
+
+        return new BigInt.DivisionResult(quotient, remainder);
+    }
+
+    public BigInt quotient(BigInt y) {
+        return this.divide(y).quotient();
     }
 
     public BigInt mod(BigInt y) {
-        return null;
+        return this.divide(y).remainder();
     }
 
     public BigInt pow(BigInt y) {
