@@ -160,6 +160,7 @@ public class BigIntTests {
         assertTrue(new BigInt(new int[] {1,2}).compareTo(new BigInt(new int[] {1,2})) == 0);
         assertTrue(new BigInt(new int[] {1,2}).compareTo(new BigInt(new int[] {0,2})) > 0);
         assertTrue(new BigInt(new int[] {1,2}).compareTo(new BigInt(new int[] {(int)4294967295L,2})) < 0);
+        assertTrue(new BigInt(new int[] {0,10}).compareTo(new BigInt(new int[] {1,8})) > 0);
     }
 }
 

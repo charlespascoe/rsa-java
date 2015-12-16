@@ -233,7 +233,7 @@ public class BigInt implements Comparable<BigInt> {
 
         if (diff != 0) return diff;
 
-        for (int i = 0; i < this.digitCount(); i++) {
+        for (int i = this.digitCount() - 1; i >= 0; i--) {
             diff = Utils.unsignedIntCompare(this.getDigit(i), other.getDigit(i));
             if (diff != 0) return diff;
         }
