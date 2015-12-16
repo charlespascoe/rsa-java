@@ -38,6 +38,12 @@ public class BigIntTests {
         assertEquals(1, new BigInt(0).digitCount());
         assertEquals(1, new BigInt((int)4294967295L).digitCount());
         assertEquals(2, new BigInt(new int[] {0,1}).digitCount());
+
+        BigInt x = new BigInt(1);
+        x.setDigit(2, 1000);
+        assertEquals(1001, x.digitCount());
+        x.setDigit(0, 1000);
+        assertEquals(1, x.digitCount());
     }
 
     @Test
