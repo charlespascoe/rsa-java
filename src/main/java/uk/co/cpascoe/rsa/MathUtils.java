@@ -3,6 +3,72 @@ package uk.co.cpascoe.rsa;
 import java.util.Random;
 
 public abstract class MathUtils {
+    /**
+     * Returns the big-endian byte representation of the integer
+     *
+     * @param value The value to convert
+     *
+     * @return A byte array of length 4
+     */
+    public static byte[] intToBigEndianBytes(int value) {
+        byte[] data = new byte[4];
+
+        int mask = 255;
+
+        for (int i = 3; i >= 0; i--) {
+            data[i] = (byte)(mask & value);
+            value = value >> 8;
+        }
+
+        return data;
+    }
+
+    public static int unsignedByte(byte value) {
+        return value < 0 ? value + 256 : value;
+    }
+
+    public static long unsignedInt(int value) {
+        return value < 0 ? value + Constants.TWO_POW_32 : value;
+    }
+
+    /**
+     * Returns the integer represented by the big-endian byte array passed in
+     */
+    public static int bigEndianBytesToInt(byte[] data) {
+        if (data.length != 4) {
+            throw new Error("data must have a length of 4");
+        }
+
+        int value = 0;
+
+        for (int i = 0; i < 4; i++) {
+            value = (value << 8) + MathUtils.unsignedByte(data[i]);
+        }
+
+        return value;
+    }
+
+    /**
+     * Returns the integer represented by the big-endian byte array passed in
+     */
+    public static int littleEndianBytesToInt(byte[] data) {
+        if (data.length != 4) {
+            throw new Error("data must have a length of 4");
+        }
+
+        int value = 0;
+
+        for (int i = 3; i >= 0; i--) {
+            value = (value << 8) + MathUtils.unsignedByte(data[i]);
+        }
+
+        return value;
+    }
+
+    public static int unsignedIntCompare(int a, int b) {
+        return Long.compare(MathUtils.unsignedInt(a), MathUtils.unsignedInt(b));
+    }
+
     public static BigInt gcd(BigInt a, BigInt b) {
         if (a.equals(new BigInt(0))) return b;
         if (b.equals(new BigInt(0))) return a;

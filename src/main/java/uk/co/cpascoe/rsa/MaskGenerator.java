@@ -31,7 +31,7 @@ public class MaskGenerator {
             MessageDigest md = MessageDigest.getInstance(this.mdName);
 
             md.update(seed);
-            md.update(Utils.intToBigEndianBytes(i));
+            md.update(MathUtils.intToBigEndianBytes(i));
 
             int copyLength = this.digestLength;
 

@@ -39,7 +39,7 @@ public class BigInt implements Comparable<BigInt> {
         this.digits = new int[(data.length + 3) / 4];
 
         for (int i = 0; i < this.digits.length; i++) {
-            this.digits[i] = Utils.littleEndianBytesToInt(Arrays.copyOfRange(data, i * 4, (i + 1) * 4));
+            this.digits[i] = MathUtils.littleEndianBytesToInt(Arrays.copyOfRange(data, i * 4, (i + 1) * 4));
         }
     }
 
@@ -136,8 +136,8 @@ public class BigInt implements Comparable<BigInt> {
 
     public void addToDigit(int digit, int index) {
         boolean carry = false;
-        long unsignedDigit = Utils.unsignedInt(digit);
-        long unsignedCurrentDigit = Utils.unsignedInt(this.getDigit(index));
+        long unsignedDigit = MathUtils.unsignedInt(digit);
+        long unsignedCurrentDigit = MathUtils.unsignedInt(this.getDigit(index));
         long sum = unsignedDigit + unsignedCurrentDigit;
 
         if (sum >= Constants.TWO_POW_32) {
@@ -154,8 +154,8 @@ public class BigInt implements Comparable<BigInt> {
         // N.B.: This will run forever if the digit to subtract is larger than the digit at this position
         // and this digit is the highest-order digit
         boolean carry = false;
-        long unsignedDigit = Utils.unsignedInt(digit);
-        long unsignedCurrentDigit = Utils.unsignedInt(this.getDigit(index));
+        long unsignedDigit = MathUtils.unsignedInt(digit);
+        long unsignedCurrentDigit = MathUtils.unsignedInt(this.getDigit(index));
         long diff = unsignedCurrentDigit - unsignedDigit;
 
         if (diff < 0) {
@@ -197,7 +197,7 @@ public class BigInt implements Comparable<BigInt> {
 
         for (int i = 0; i < this.digitCount(); i++) {
             for (int j = 0; j < other.digitCount(); j++) {
-                long product = Utils.unsignedInt(this.getDigit(i)) * Utils.unsignedInt(other.getDigit(j));
+                long product = MathUtils.unsignedInt(this.getDigit(i)) * MathUtils.unsignedInt(other.getDigit(j));
 
                 int digit1 = (int)(product & intMask);
                 int digit2 = (int)((product >> 32) & intMask);
@@ -299,7 +299,7 @@ public class BigInt implements Comparable<BigInt> {
         if (diff != 0) return diff;
 
         for (int i = this.digitCount() - 1; i >= 0; i--) {
-            diff = Utils.unsignedIntCompare(this.getDigit(i), other.getDigit(i));
+            diff = MathUtils.unsignedIntCompare(this.getDigit(i), other.getDigit(i));
             if (diff != 0) return diff;
         }
 
