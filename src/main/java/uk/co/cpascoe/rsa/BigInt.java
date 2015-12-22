@@ -190,6 +190,11 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
+    public BigInt subtractMod(BigInt other, BigInt modulus) {
+        if (this.greaterThanOrEqual(other)) return this.subtract(other);
+        return modulus.subtract(other.subtract(this).mod(modulus));
+    }
+
     public BigInt multiply(BigInt other) {
         BigInt result = new BigInt(0);
 
