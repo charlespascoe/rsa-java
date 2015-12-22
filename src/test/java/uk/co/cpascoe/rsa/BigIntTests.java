@@ -241,5 +241,12 @@ public class BigIntTests {
         assertTrue(new BigInt(new int[] {1,2}).compareTo(new BigInt(new int[] {(int)4294967295L,2})) < 0);
         assertTrue(new BigInt(new int[] {0,10}).compareTo(new BigInt(new int[] {1,8})) > 0);
     }
+
+    @Test
+    public void exportToByteArray() {
+        assertArrayEquals(new byte[] {1,0,0,0}, new BigInt(1).exportToByteArray());
+        assertArrayEquals(new byte[] {1,1,0,0}, new BigInt(257).exportToByteArray());
+        assertArrayEquals(new byte[] {(byte)255,(byte)255,0,0}, new BigInt(65535).exportToByteArray());
+    }
 }
 

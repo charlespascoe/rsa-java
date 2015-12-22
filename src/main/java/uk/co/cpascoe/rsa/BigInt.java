@@ -376,5 +376,18 @@ public class BigInt implements Comparable<BigInt> {
     public int[] exportToIntArray() {
         return Arrays.copyOf(this.digits, this.digitCount());
     }
+
+    public byte[] exportToByteArray() {
+        int [] digits = this.exportToIntArray();
+        byte[] output = new byte[digits.length * 4];
+
+        for (int i = 0; i < digits.length; i++) {
+            for (int j = 0; j < 4; j++) {
+                output[4*i + j] = (byte)((digits[i] >> (8 * j)) & 255);
+            }
+        }
+
+        return output;
+    }
 }
 
