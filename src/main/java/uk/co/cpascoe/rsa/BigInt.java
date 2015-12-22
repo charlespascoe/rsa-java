@@ -260,6 +260,33 @@ public class BigInt implements Comparable<BigInt> {
         return this.divide(modulus).remainder();
     }
 
+    public BigInt modInverse(BigInt modulus) {
+        BigInt t = new BigInt(0);
+        BigInt r = modulus;
+
+        BigInt nextT = new BigInt(1);
+        BigInt nextR = this;
+
+        // Intermediate variable for swapping variables
+        BigInt tmp;
+
+        while (!nextR.equals(new BigInt(0))) {
+            BigInt.DivisionResult divResult = r.divide(nextR);
+
+            tmp = nextT;
+            nextT = t.subtractMod(divResult.quotient().multiply(nextT), modulus);
+            t = tmp;
+
+            r = nextR;
+            nextR = divResult.remainder();
+        }
+
+        // r > 1 => No inverse
+        if (r.greaterThan(new BigInt(1))) return null;
+
+        return t;
+    }
+
     public BigInt pow(BigInt exponent) {
         BigInt result = new BigInt(1);
         BigInt base = this;

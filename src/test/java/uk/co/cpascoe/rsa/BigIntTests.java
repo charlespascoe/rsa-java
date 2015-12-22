@@ -214,6 +214,17 @@ public class BigIntTests {
     }
 
     @Test
+    public void modInverse() {
+        assertArrayEquals("Correct single-digit inverse", new int[] {7}, new BigInt(3).modInverse(new BigInt(10)).exportToIntArray());
+
+        BigInt primeModulus = new BigInt(2).pow(new BigInt(127)).subtract(new BigInt(1));
+        BigInt x = new BigInt(new int[] {1,2,3,4,5,6});
+        BigInt xInverse = x.modInverse(primeModulus);
+
+        assertArrayEquals("Correct multi-digit inverse, even if x > modulus", new int[] {1}, x.multiply(xInverse).mod(primeModulus).exportToIntArray());
+    }
+
+    @Test
     public void pow() {
         assertArrayEquals("Exponentiation with single digits", new int[] {128}, new BigInt(2).pow(new BigInt(7)).exportToIntArray());
         assertArrayEquals("Exponentiation with multiple digits", new int[] {1024,25600,288000,1920000,8400000,25200000,52500000,75000000,70312500,39062500,9765625}, new BigInt(new int[] {2,5}).pow(new BigInt(new int[] {10})).exportToIntArray());
