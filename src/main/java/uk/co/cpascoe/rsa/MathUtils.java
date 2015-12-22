@@ -1,6 +1,7 @@
 package uk.co.cpascoe.rsa;
 
 import java.util.Random;
+import java.security.SecureRandom;
 
 public abstract class MathUtils {
     /**
@@ -103,7 +104,21 @@ public abstract class MathUtils {
     }
 
     public static BigInt generateProbablePrime(int bits) {
-        return null;
+        Random r = new SecureRandom();
+        BigInt randomNumber;
+
+        do {
+            randomNumber = MathUtils.randomBigInt(bits, r);
+
+            // Make sure that it has the correct number of bits
+            randomNumber.setBitAt(1, bits - 1);
+
+            // Make sure that it is odd; no prime above 2 is even
+            randomNumber.setBitAt(1, 0);
+        } while (!randomNumber.isProbablePrime());
+
+        return randomNumber;
+
     }
 
 }

@@ -75,4 +75,13 @@ public class MathUtilsTests {
             assertTrue(x.greaterThanOrEqual(lowerLimit));
         }
     }
+
+    @Test
+    public void generateProbablePrime() {
+        for (int i = 0; i < 20; i++) {
+            BigInt x = MathUtils.generateProbablePrime(64);
+            assertEquals(64, x.bitCount());
+            assertTrue(x.isProbablePrime());
+        }
+    }
 }
