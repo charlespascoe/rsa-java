@@ -222,6 +222,15 @@ public class BigIntTests {
     }
 
     @Test
+    public void isProbablePrime() {
+        assertTrue(new BigInt(37).isProbablePrime(15));
+        assertTrue(new BigInt(2).pow(new BigInt(127)).subtract(new BigInt(1)).isProbablePrime(15));
+
+        assertFalse(new BigInt(100).isProbablePrime(15));
+        assertFalse(new BigInt(2).pow(new BigInt(127)).add(new BigInt(1)).isProbablePrime(15));
+    }
+
+    @Test
     public void compareTo() {
         assertTrue(new BigInt(5).compareTo(new BigInt(6)) < 0);
         assertTrue(new BigInt(5).compareTo(new BigInt(5)) == 0);

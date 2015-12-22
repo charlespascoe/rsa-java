@@ -283,9 +283,56 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
-    public boolean isProbablePrime(int certainty) {
-        return false;
+    /**
+     * Uses the Miller-Rabin primality test to check whether or not this number is probably prime with 15 trials
+     * @return True if probably prime, false if definitely not prime
+     */
+    public boolean isProbablePrime() {
+        return this.isProbablePrime(15);
+    }
 
+    /**
+     * Uses the Miller-Rabin primality test to check whether or not this number is probably prime
+     * @param certainty The number of trials (more trials, more certainty)
+     * @return True if probably prime, false if definitely not prime
+     */
+    public boolean isProbablePrime(int certainty) {
+        BigInt nMinusOne = this.subtract(new BigInt(1));
+
+        // n - 1 = 2^s * d
+        int s = nMinusOne.getLowestSetBit();
+        BigInt d = nMinusOne.quotient(new BigInt(2).pow(new BigInt(s)));
+
+        Random r = new SecureRandom();
+
+        for (int i = 0; i < certainty; i++) {
+            BigInt a = MathUtils.randomBigInt(new BigInt(2), this.subtract(new BigInt(2)), r);
+
+            BigInt x = a.powMod(d, this);
+
+            if (!x.equals(new BigInt(1)) && !x.equals(nMinusOne)) {
+                boolean solutionFound = false;
+
+                for (int j = 0; j < s; j++) {
+                    x = x.multiply(x).mod(this);
+
+                    if (x.equals(new BigInt(1))) {
+                        return false;
+                    }
+
+                    if (x.equals(nMinusOne)) {
+                        solutionFound = true;
+                        break;
+                    }
+                }
+
+                if (!solutionFound) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     @Override
