@@ -200,17 +200,53 @@ public class BigInt implements Comparable<BigInt> {
 
         long intMask = Constants.TWO_POW_32 - 1;
 
-        for (int i = 0; i < this.digitCount(); i++) {
-            for (int j = 0; j < other.digitCount(); j++) {
-                long product = MathUtils.unsignedInt(this.getDigit(i)) * MathUtils.unsignedInt(other.getDigit(j));
+        if (this.equals(other)) {
+            for (int i = 0; i < this.digitCount(); i++) {
+                for (int j = 0; j < i; j++) {
+                    long product = MathUtils.unsignedInt(this.getDigit(i)) * MathUtils.unsignedInt(other.getDigit(j));
+                    if (product == 0) continue;
+
+                    int digit1 = (int)(product & intMask);
+                    int digit2 = (int)((product >> 32) & intMask);
+
+                    result.addToDigit(digit1, i + j);
+
+                    if (digit2 != 0)
+                        result.addToDigit(digit2, i + j + 1);
+                }
+            }
+
+            result.shiftBitsUp();
+
+            for (int i = 0; i < this.digitCount(); i++) {
+                long product = MathUtils.unsignedInt(this.getDigit(i));
+
+                if (product == 0) continue;
+
+                product = product * product;
 
                 int digit1 = (int)(product & intMask);
                 int digit2 = (int)((product >> 32) & intMask);
 
-                result.addToDigit(digit1, i + j);
+                result.addToDigit(digit1, 2 * i);
 
                 if (digit2 != 0)
-                    result.addToDigit(digit2, i + j + 1);
+                    result.addToDigit(digit2, 2 * i + 1);
+            }
+        } else {
+            for (int i = 0; i < this.digitCount(); i++) {
+                for (int j = 0; j < other.digitCount(); j++) {
+                    long product = MathUtils.unsignedInt(this.getDigit(i)) * MathUtils.unsignedInt(other.getDigit(j));
+                    if (product == 0) continue;
+
+                    int digit1 = (int)(product & intMask);
+                    int digit2 = (int)((product >> 32) & intMask);
+
+                    result.addToDigit(digit1, i + j);
+
+                    if (digit2 != 0)
+                        result.addToDigit(digit2, i + j + 1);
+                }
             }
         }
 
