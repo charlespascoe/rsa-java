@@ -3,6 +3,9 @@ package uk.co.cpascoe.rsa;
 import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
+import java.lang.reflect.Type;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 public class RsaPrivateKey extends RsaKey {
     protected BigInt p;
@@ -13,11 +16,10 @@ public class RsaPrivateKey extends RsaKey {
     protected BigInt dq;
     protected BigInt qinv;
 
-    /*
     public RsaPrivateKey(Map<String, String> data) throws Exception {
-        if (!data.containsKey("n") ||
-            !data.containsKey("e") ||
-            !data.containsKey("p") ||
+        super(data);
+
+        if (!data.containsKey("p") ||
             !data.containsKey("q") ||
             !data.containsKey("phi_n") ||
             !data.containsKey("d") ||
@@ -34,17 +36,14 @@ public class RsaPrivateKey extends RsaKey {
             }
         }
 
-        this.n = new BigInt(data.get("n"), 16);
-        this.e = new BigInt(data.get("e"), 16);
-        this.p = new BigInt(data.get("p"), 16);
-        this.q = new BigInt(data.get("q"), 16);
-        this.phi_n = new BigInt(data.get("phi_n"), 16);
-        this.d = new BigInt(data.get("d"), 16);
-        this.dp = new BigInt(data.get("dp"), 16);
-        this.dq = new BigInt(data.get("dq"), 16);
-        this.qinv = new BigInt(data.get("qinv"), 16);
+        this.p = new BigInt(Utils.base64ToBytes(data.get("p")));
+        this.q = new BigInt(Utils.base64ToBytes(data.get("q")));
+        this.phi_n = new BigInt(Utils.base64ToBytes(data.get("phi_n")));
+        this.d = new BigInt(Utils.base64ToBytes(data.get("d")));
+        this.dp = new BigInt(Utils.base64ToBytes(data.get("dp")));
+        this.dq = new BigInt(Utils.base64ToBytes(data.get("dq")));
+        this.qinv = new BigInt(Utils.base64ToBytes(data.get("qinv")));
     }
-    */
 
     public RsaPrivateKey(int bits) {
         this.e = new BigInt(65537);
@@ -81,20 +80,28 @@ public class RsaPrivateKey extends RsaKey {
         return m2.add(h.multiply(this.q));
     }
 
-    /*
     @Override
     public Map<String, String> exportToMap() {
         Map<String, String> data = super.exportToMap();
 
-        data.put("p", this.p.toString(16));
-        data.put("q", this.q.toString(16));
-        data.put("phi_n", this.phi_n.toString(16));
-        data.put("d", this.d.toString(16));
-        data.put("dp", this.dp.toString(16));
-        data.put("dq", this.dq.toString(16));
-        data.put("qinv", this.qinv.toString(16));
+        data.put("p", Utils.bytesToBase64(this.p.exportToByteArray()));
+        data.put("q", Utils.bytesToBase64(this.q.exportToByteArray()));
+        data.put("phi_n", Utils.bytesToBase64(this.phi_n.exportToByteArray()));
+        data.put("d", Utils.bytesToBase64(this.d.exportToByteArray()));
+        data.put("dp", Utils.bytesToBase64(this.dp.exportToByteArray()));
+        data.put("dq", Utils.bytesToBase64(this.dq.exportToByteArray()));
+        data.put("qinv", Utils.bytesToBase64(this.qinv.exportToByteArray()));
 
         return data;
     }
-    */
+
+    public static RsaPrivateKey importFromJson(String json) throws Exception {
+        Gson gson = new Gson();
+
+        Type type = new TypeToken<Map<String,String>>(){}.getType();
+
+        Map<String, String> data = gson.fromJson(json, type);
+
+        return new RsaPrivateKey(data);
+    }
 }

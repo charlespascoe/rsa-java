@@ -17,11 +17,11 @@ public abstract class Utils {
     }
 
     public static String bytesToBase64(byte[] bytes) {
-        return DatatypeConverter.printBase64Binary(bytes);
+        return DatatypeConverter.printHexBinary(bytes);
     }
 
     public static byte[] base64ToBytes(String base64) {
-        return DatatypeConverter.parseBase64Binary(base64);
+        return DatatypeConverter.parseHexBinary(base64);
     }
 
     /**

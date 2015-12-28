@@ -2,6 +2,9 @@ package uk.co.cpascoe.rsa;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.lang.reflect.Type;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 public class RsaKey {
     protected BigInt n;
@@ -12,7 +15,6 @@ public class RsaKey {
     }
 
     public RsaKey(Map<String, String> data) throws Exception {
-        /*
         if (!data.containsKey("n") || !data.containsKey("e")) {
             throw new Exception("Keys missing from data object");
         }
@@ -21,9 +23,8 @@ public class RsaKey {
             throw new Exception("Invalid hex values");
         }
 
-        this.n = new BigInt(data.get("n"), 16);
-        this.e = new BigInt(data.get("e"), 16);
-        */
+        this.n = new BigInt(Utils.base64ToBytes(data.get("n")));
+        this.e = new BigInt(Utils.base64ToBytes(data.get("e")));
     }
 
     public BigInt publicExponentation(BigInt val) {
@@ -37,9 +38,23 @@ public class RsaKey {
     public Map<String, String> exportToMap() {
         Map<String, String> data = new HashMap<String, String>();
 
-        // data.put("n", n.toString(16));
-        // data.put("e", e.toString(16));
+        data.put("n", Utils.bytesToBase64(this.n.exportToByteArray()));
+        data.put("e", Utils.bytesToBase64(this.e.exportToByteArray()));
 
         return data;
+    }
+
+    public String exportToJson() {
+        return new Gson().toJson(this.exportToMap());
+    }
+
+    public static RsaKey importFromJson(String json) throws Exception {
+        Gson gson = new Gson();
+
+        Type type = new TypeToken<Map<String,String>>(){}.getType();
+
+        Map<String, String> data = gson.fromJson(json, type);
+
+        return new RsaKey(data);
     }
 }
