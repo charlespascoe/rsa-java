@@ -227,11 +227,37 @@ public class BigInt implements Comparable<BigInt> {
             this.powerOf2Multiples = Arrays.copyOf(this.powerOf2Multiples, n);
 
             for (int i = prevLength; i < this.powerOf2Multiples.length; i++) {
-                this.powerOf2Multiples[i] = this.powerOf2Multiples[i - 1].multiply(new BigInt(2));
+                this.powerOf2Multiples[i] = new BigInt(this.powerOf2Multiples[i - 1].exportToIntArray());
+                this.powerOf2Multiples[i].shiftBitsUp();
             }
         }
 
         return Arrays.copyOf(this.powerOf2Multiples, n);
+    }
+
+    public void shiftBitsUp() {
+        boolean carry = false;
+        boolean prevCarry = false;
+
+        int digitCount = this.digitCount();
+
+        for (int i = 0; i < digitCount; i++) {
+            int digit = this.getDigit(i);
+
+            carry = (digit & Constants.BIT_MASKS[31]) != 0;
+
+            digit <<= 1;
+
+            if (prevCarry) digit++;
+
+            this.setDigit(digit, i);
+
+            prevCarry = carry;
+        }
+
+        if (carry) {
+            this.setDigit(1, digitCount);
+        }
     }
 
     public BigInt.DivisionResult divide(BigInt divisor) {

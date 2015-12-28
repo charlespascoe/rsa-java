@@ -163,6 +163,23 @@ public class BigIntTests {
     }
 
     @Test
+    public void shiftBitsUp() {
+        BigInt x = new BigInt(1);
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {2}, x.exportToIntArray());
+        x = new BigInt(3);
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {6}, x.exportToIntArray());
+        x = new BigInt(new int[] {1,2,3,4});
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {2,4,6,8}, x.exportToIntArray());
+        x = new BigInt(new int[] {(int)4294967295L});
+        x.shiftBitsUp();
+        System.out.println(x);
+        assertArrayEquals(new int[] {(int)4294967294L,1}, x.exportToIntArray());
+    }
+
+    @Test
     public void subtractMod() {
         assertArrayEquals(new int[] {9}, new BigInt(3).subtractMod(new BigInt(24), new BigInt(10)).exportToIntArray());
         assertArrayEquals(new int[] {(int)4294967295L,(int)4294967295L}, new BigInt(3).subtractMod(new BigInt(4), new BigInt(new int[] {0,0,1})).exportToIntArray());
