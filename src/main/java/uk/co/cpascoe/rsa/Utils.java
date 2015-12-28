@@ -2,6 +2,7 @@ package uk.co.cpascoe.rsa;
 
 import java.util.regex.Pattern;
 import java.util.Arrays;
+import javax.xml.bind.DatatypeConverter;
 
 public abstract class Utils {
     /**
@@ -13,6 +14,14 @@ public abstract class Utils {
         if (str == null) return false;
         Pattern p = Pattern.compile("^[0-9A-Fa-f]+$");
         return p.matcher(str).matches();
+    }
+
+    public static String bytesToBase64(byte[] bytes) {
+        return DatatypeConverter.printBase64Binary(bytes);
+    }
+
+    public static byte[] base64ToBytes(String base64) {
+        return DatatypeConverter.parseBase64Binary(base64);
     }
 
     /**
