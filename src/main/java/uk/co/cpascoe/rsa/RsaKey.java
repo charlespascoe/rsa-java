@@ -1,18 +1,18 @@
 package uk.co.cpascoe.rsa;
 
-import java.math.BigInteger;
 import java.util.Map;
 import java.util.HashMap;
 
 public class RsaKey {
-    protected BigInteger n;
-    protected BigInteger e;
+    protected BigInt n;
+    protected BigInt e;
 
     public RsaKey() {
 
     }
 
     public RsaKey(Map<String, String> data) throws Exception {
+        /*
         if (!data.containsKey("n") || !data.containsKey("e")) {
             throw new Exception("Keys missing from data object");
         }
@@ -21,12 +21,13 @@ public class RsaKey {
             throw new Exception("Invalid hex values");
         }
 
-        this.n = new BigInteger(data.get("n"), 16);
-        this.e = new BigInteger(data.get("e"), 16);
+        this.n = new BigInt(data.get("n"), 16);
+        this.e = new BigInt(data.get("e"), 16);
+        */
     }
 
-    public BigInteger publicExponentation(BigInteger val) {
-        return val.modPow(this.e, this.n);
+    public BigInt publicExponentation(BigInt val) {
+        return val.powMod(this.e, this.n);
     }
 
     public byte[] exportDer() {
@@ -36,8 +37,8 @@ public class RsaKey {
     public Map<String, String> exportToMap() {
         Map<String, String> data = new HashMap<String, String>();
 
-        data.put("n", n.toString(16));
-        data.put("e", e.toString(16));
+        // data.put("n", n.toString(16));
+        // data.put("e", e.toString(16));
 
         return data;
     }
