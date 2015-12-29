@@ -57,6 +57,28 @@ public class BigIntTests {
     }
 
     @Test
+    public void bitCount() {
+        assertEquals(0, new BigInt(0).bitCount());
+        assertEquals(1, new BigInt(1).bitCount());
+        assertEquals(2, new BigInt(2).bitCount());
+        assertEquals(2, new BigInt(3).bitCount());
+        assertEquals(8, new BigInt(128).bitCount());
+
+        byte[] b = new byte[256];
+        b[255] = (byte)255;
+        assertEquals(2048, new BigInt(b).bitCount());
+    }
+
+    @Test
+    public void getLowestSetBit() {
+        assertEquals(-1, new BigInt(0).getLowestSetBit());
+        assertEquals(0, new BigInt(1).getLowestSetBit());
+        assertEquals(1, new BigInt(2).getLowestSetBit());
+        assertEquals(0, new BigInt(3).getLowestSetBit());
+        assertEquals(7, new BigInt(128).getLowestSetBit());
+    }
+
+    @Test
     public void getBitAt() {
         assertEquals(0, new BigInt(0).getBitAt(0));
         assertEquals(1, new BigInt(1).getBitAt(0));
@@ -79,28 +101,6 @@ public class BigIntTests {
         assertArrayEquals(new int[] {65537}, x.exportToIntArray());
         x.setBitAt(1, 16);
         assertArrayEquals("Setting a set bit should not change the value", new int[] {65537}, x.exportToIntArray());
-    }
-
-    @Test
-    public void bitCount() {
-        assertEquals(0, new BigInt(0).bitCount());
-        assertEquals(1, new BigInt(1).bitCount());
-        assertEquals(2, new BigInt(2).bitCount());
-        assertEquals(2, new BigInt(3).bitCount());
-        assertEquals(8, new BigInt(128).bitCount());
-
-        byte[] b = new byte[256];
-        b[255] = (byte)255;
-        assertEquals(2048, new BigInt(b).bitCount());
-    }
-
-    @Test
-    public void getLowestSetBit() {
-        assertEquals(-1, new BigInt(0).getLowestSetBit());
-        assertEquals(0, new BigInt(1).getLowestSetBit());
-        assertEquals(1, new BigInt(2).getLowestSetBit());
-        assertEquals(0, new BigInt(3).getLowestSetBit());
-        assertEquals(7, new BigInt(128).getLowestSetBit());
     }
 
     @Test
@@ -186,22 +186,6 @@ public class BigIntTests {
     }
 
     @Test
-    public void shiftBitsUp() {
-        BigInt x = new BigInt(1);
-        x.shiftBitsUp();
-        assertArrayEquals(new int[] {2}, x.exportToIntArray());
-        x = new BigInt(3);
-        x.shiftBitsUp();
-        assertArrayEquals(new int[] {6}, x.exportToIntArray());
-        x = new BigInt(new int[] {1,2,3,4});
-        x.shiftBitsUp();
-        assertArrayEquals(new int[] {2,4,6,8}, x.exportToIntArray());
-        x = new BigInt(new int[] {(int)4294967295L});
-        x.shiftBitsUp();
-        assertArrayEquals(new int[] {(int)4294967294L,1}, x.exportToIntArray());
-    }
-
-    @Test
     public void subtractMod() {
         assertArrayEquals(new int[] {9}, new BigInt(3).subtractMod(new BigInt(24), new BigInt(10)).exportToIntArray());
         assertArrayEquals(new int[] {(int)4294967295L,(int)4294967295L}, new BigInt(3).subtractMod(new BigInt(4), new BigInt(new int[] {0,0,1})).exportToIntArray());
@@ -232,6 +216,22 @@ public class BigIntTests {
             assertTrue(pow2Multiples[i].equals(x.multiply(new BigInt(p2))));
             p2 *= 2;
         }
+    }
+
+    @Test
+    public void shiftBitsUp() {
+        BigInt x = new BigInt(1);
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {2}, x.exportToIntArray());
+        x = new BigInt(3);
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {6}, x.exportToIntArray());
+        x = new BigInt(new int[] {1,2,3,4});
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {2,4,6,8}, x.exportToIntArray());
+        x = new BigInt(new int[] {(int)4294967295L});
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {(int)4294967294L,1}, x.exportToIntArray());
     }
 
     @Test
