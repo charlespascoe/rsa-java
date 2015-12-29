@@ -278,44 +278,13 @@ public class BigInt implements Comparable<BigInt> {
      * Returns the result of the multiplication of this BigInt and the given BigInt
      */
     public BigInt multiply(BigInt other) {
-        BigInt result = new BigInt(0);
-
-        long intMask = Constants.TWO_POW_32 - 1;
-
         if (this.equals(other)) {
-            for (int i = 0; i < this.digitCount(); i++) {
-                for (int j = 0; j < i; j++) {
-                    long product = MathUtils.unsignedInt(this.getDigit(i)) * MathUtils.unsignedInt(other.getDigit(j));
-                    if (product == 0) continue;
-
-                    int digit1 = (int)(product & intMask);
-                    int digit2 = (int)((product >> 32) & intMask);
-
-                    result.addToDigit(digit1, i + j);
-
-                    if (digit2 != 0)
-                        result.addToDigit(digit2, i + j + 1);
-                }
-            }
-
-            result.shiftBitsUp();
-
-            for (int i = 0; i < this.digitCount(); i++) {
-                long product = MathUtils.unsignedInt(this.getDigit(i));
-
-                if (product == 0) continue;
-
-                product = product * product;
-
-                int digit1 = (int)(product & intMask);
-                int digit2 = (int)((product >> 32) & intMask);
-
-                result.addToDigit(digit1, 2 * i);
-
-                if (digit2 != 0)
-                    result.addToDigit(digit2, 2 * i + 1);
-            }
+            return this.square();
         } else {
+            BigInt result = new BigInt(0);
+
+            long intMask = Constants.TWO_POW_32 - 1;
+
             for (int i = 0; i < this.digitCount(); i++) {
                 for (int j = 0; j < other.digitCount(); j++) {
                     long product = MathUtils.unsignedInt(this.getDigit(i)) * MathUtils.unsignedInt(other.getDigit(j));
@@ -330,6 +299,47 @@ public class BigInt implements Comparable<BigInt> {
                         result.addToDigit(digit2, i + j + 1);
                 }
             }
+
+            return result;
+        }
+    }
+
+    public BigInt square() {
+        BigInt result = new BigInt(0);
+
+        long intMask = Constants.TWO_POW_32 - 1;
+
+        for (int i = 0; i < this.digitCount(); i++) {
+            for (int j = 0; j < i; j++) {
+                long product = MathUtils.unsignedInt(this.getDigit(i)) * MathUtils.unsignedInt(this.getDigit(j));
+                if (product == 0) continue;
+
+                int digit1 = (int)(product & intMask);
+                int digit2 = (int)((product >> 32) & intMask);
+
+                result.addToDigit(digit1, i + j);
+
+                if (digit2 != 0)
+                    result.addToDigit(digit2, i + j + 1);
+            }
+        }
+
+        result.shiftBitsUp();
+
+        for (int i = 0; i < this.digitCount(); i++) {
+            long product = MathUtils.unsignedInt(this.getDigit(i));
+
+            if (product == 0) continue;
+
+            product = product * product;
+
+            int digit1 = (int)(product & intMask);
+            int digit2 = (int)((product >> 32) & intMask);
+
+            result.addToDigit(digit1, 2 * i);
+
+            if (digit2 != 0)
+                result.addToDigit(digit2, 2 * i + 1);
         }
 
         return result;
@@ -451,7 +461,7 @@ public class BigInt implements Comparable<BigInt> {
             if (exponent.getBitAt(i) == 1) {
                 result = result.multiply(base);
             }
-            base = base.multiply(base);
+            base = base.square();
         }
 
         return result;
@@ -465,7 +475,7 @@ public class BigInt implements Comparable<BigInt> {
             if (exponent.getBitAt(i) == 1) {
                 result = result.multiply(base).mod(modulus);
             }
-            base = base.multiply(base).mod(modulus);
+            base = base.square().mod(modulus);
         }
 
         return result;

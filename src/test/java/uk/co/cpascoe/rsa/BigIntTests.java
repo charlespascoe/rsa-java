@@ -207,6 +207,13 @@ public class BigIntTests {
     }
 
     @Test
+    public void square() {
+        assertArrayEquals("Single-digit squaring should be correct", new int[] {144}, new BigInt(12).square().exportToIntArray());
+        assertArrayEquals("Multi-digit squaring should be correct", new int[] {4,12,25,24,16}, new BigInt(new int[] {2,3,4}).square().exportToIntArray());
+        assertArrayEquals("Multi-digit squaring with carry should be correct", new int[] {1,(int)4294967294L}, new BigInt(new int[] {(int)4294967295L}).square().exportToIntArray());
+    }
+
+    @Test
     public void getPowerOf2Multiples() {
         BigInt x = new BigInt(new int[] {1,2,3});
         BigInt[] pow2Multiples = x.getPowerOf2Multiples(10);
