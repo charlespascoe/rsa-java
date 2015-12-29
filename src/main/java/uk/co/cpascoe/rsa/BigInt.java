@@ -49,7 +49,7 @@ public class BigInt implements Comparable<BigInt> {
     public BigInt(byte[] data) {
         int digit = 0;
 
-        this.digits = new int[(data.length + 3) / 4];
+        this.digits = new int[MathUtils.divCeil(data.length, 4)];
 
         for (int i = 0; i < this.digits.length; i++) {
             this.digits[i] = MathUtils.littleEndianBytesToInt(Arrays.copyOfRange(data, i * 4, (i + 1) * 4));
@@ -576,6 +576,8 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public int[] exportToIntArray() {
+        // Copying array prevents external modification
+        // and reduces it to the minimum length without any high-order zeros
         return Arrays.copyOf(this.digits, this.digitCount());
     }
 
