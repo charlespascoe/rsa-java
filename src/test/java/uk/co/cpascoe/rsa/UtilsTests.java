@@ -108,5 +108,13 @@ public class UtilsTests {
         assertArrayEquals(new byte[] {1,2,3,4,5,6,7,8}, output1.toByteArray());
         assertArrayEquals(new byte[1000000], output2.toByteArray());
     }
+
+    @Test
+    public void constantTimeEquals() {
+        assertFalse("Arrays of different lengths should not be equal", Utils.constantTimeEquals(new byte[1], new byte[2]));
+        assertTrue("Empty arrays should be equal", Utils.constantTimeEquals(new byte[0], new byte[0]));
+        assertTrue("Zero-filled arrays should be equal", Utils.constantTimeEquals(new byte[10], new byte[10]));
+        assertFalse("Two arrays with a single number different should not be equal", Utils.constantTimeEquals(new byte[] {1,2,3}, new byte[] {1,2,5}));
+    }
 }
 
