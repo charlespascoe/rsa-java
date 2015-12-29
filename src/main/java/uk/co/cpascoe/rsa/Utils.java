@@ -1,5 +1,8 @@
 package uk.co.cpascoe.rsa;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.Arrays;
 import javax.xml.bind.DatatypeConverter;
@@ -78,5 +81,15 @@ public abstract class Utils {
      */
     public static byte[] removeBytes(byte[] input, int count) {
         return Arrays.copyOfRange(input, count, input.length);
+    }
+
+    public static void pipeStream(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = new byte[65536];
+
+        int readCount = 0;
+
+        while ((readCount = input.read(buffer)) != -1) {
+            output.write(buffer, 0, readCount);
+        }
     }
 }

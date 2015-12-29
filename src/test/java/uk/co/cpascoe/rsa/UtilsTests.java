@@ -2,6 +2,9 @@ package uk.co.cpascoe.rsa;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class UtilsTests {
     @Test
@@ -87,5 +90,23 @@ public class UtilsTests {
         assertArrayEquals(new byte[] {4,5,6,7,8}, Utils.removeBytes(new byte[] {1,2,3,4,5,6,7,8}, 3));
     }
 
+    @Test
+    public void pipeStream() {
+        ByteArrayInputStream input1 = new ByteArrayInputStream(new byte[] {1,2,3,4,5,6,7,8});
+        ByteArrayOutputStream output1 = new ByteArrayOutputStream();
+
+        ByteArrayInputStream input2 = new ByteArrayInputStream(new byte[1000000]);
+        ByteArrayOutputStream output2 = new ByteArrayOutputStream();
+
+        try {
+            Utils.pipeStream(input1, output1);
+            Utils.pipeStream(input2, output2);
+        } catch (IOException ex) {
+            fail("Unexpected exception: " + ex.toString());
+        }
+
+        assertArrayEquals(new byte[] {1,2,3,4,5,6,7,8}, output1.toByteArray());
+        assertArrayEquals(new byte[1000000], output2.toByteArray());
+    }
 }
 
