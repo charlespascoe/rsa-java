@@ -9,6 +9,10 @@ public class OaepProvider {
     private String digestName;
     private int digestLength;
 
+    public OaepProvider() {
+        this(new MaskGenerator());
+    }
+
     public OaepProvider(MaskGenerator maskGen) {
         this.maskGen = maskGen;
         this.digestName = maskGen.getDigestName();
