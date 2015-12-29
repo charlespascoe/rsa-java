@@ -7,6 +7,16 @@ public class MaskGenerator {
     private String mdName;
     private int digestLength;
 
+    public MaskGenerator() {
+        this.mdName = "SHA-256";
+
+        try {
+            this.digestLength = MessageDigest.getInstance(this.mdName).getDigestLength();
+        } catch (NoSuchAlgorithmException ex) {
+            throw new Error("SHA-256 no longer exists!");
+        }
+    }
+
     public MaskGenerator(String mdName) throws NoSuchAlgorithmException {
         this.mdName = mdName;
         this.digestLength = MessageDigest.getInstance(mdName).getDigestLength();
