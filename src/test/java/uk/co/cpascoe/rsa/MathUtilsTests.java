@@ -6,6 +6,15 @@ import java.util.Random;
 
 public class MathUtilsTests {
     @Test
+    public void divCeil() {
+        assertEquals(0, MathUtils.divCeil(0, 3));
+        assertEquals(1, MathUtils.divCeil(1, 3));
+        assertEquals(1, MathUtils.divCeil(3, 3));
+        assertEquals(2, MathUtils.divCeil(4, 3));
+        assertEquals(4, MathUtils.divCeil(10, 3));
+    }
+
+    @Test
     public void intToBigEndianBytes() {
         assertArrayEquals(new byte[] {0,0,0,0}, MathUtils.intToBigEndianBytes(0));
         assertArrayEquals(new byte[] {0,0,0,1}, MathUtils.intToBigEndianBytes(1));

@@ -5,6 +5,13 @@ import java.security.SecureRandom;
 
 public abstract class MathUtils {
     /**
+     * Returns the value of Ceiling(x / divisor)
+     */
+    public static int divCeil(int x, int divisor) {
+        return (x + divisor - 1) / divisor;
+    }
+
+    /**
      * Returns the big-endian byte representation of the integer
      *
      * @param value The value to convert
