@@ -154,12 +154,26 @@ public class BigIntTests {
     }
 
     @Test
+    public void addInt() {
+        BigInt x = new BigInt(1);
+        assertArrayEquals(new int[] {3}, x.add(2).exportToIntArray());
+        assertArrayEquals("x should not have changed", new int[] {1}, x.exportToIntArray());
+    }
+
+    @Test
     public void subtract() {
         assertArrayEquals(new int[] {5}, new BigInt(8).subtract(new BigInt(3)).exportToIntArray());
 
         BigInt x = new BigInt(new int[] {0,10});
         BigInt y = new BigInt(new int[] {1,8});
         assertArrayEquals(new int[] {(int)4294967295L,1}, x.subtract(y).exportToIntArray());
+    }
+
+    @Test
+    public void subtractInt() {
+        BigInt x = new BigInt(123);
+        assertArrayEquals(new int[] {103}, x.subtract(20).exportToIntArray());
+        assertArrayEquals("x should not have changed", new int[] {123}, x.exportToIntArray());
     }
 
     @Test
@@ -175,7 +189,6 @@ public class BigIntTests {
         assertArrayEquals(new int[] {2,4,6,8}, x.exportToIntArray());
         x = new BigInt(new int[] {(int)4294967295L});
         x.shiftBitsUp();
-        System.out.println(x);
         assertArrayEquals(new int[] {(int)4294967294L,1}, x.exportToIntArray());
     }
 
@@ -274,6 +287,13 @@ public class BigIntTests {
         assertTrue(new BigInt(new int[] {1,2}).compareTo(new BigInt(new int[] {0,2})) > 0);
         assertTrue(new BigInt(new int[] {1,2}).compareTo(new BigInt(new int[] {(int)4294967295L,2})) < 0);
         assertTrue(new BigInt(new int[] {0,10}).compareTo(new BigInt(new int[] {1,8})) > 0);
+    }
+
+    @Test
+    public void equalsInt() {
+        assertTrue(new BigInt(5).equals(5));
+        assertFalse(new BigInt(new int[] {5,1}).equals(5));
+        assertTrue(new BigInt(0).equals(0));
     }
 
     @Test

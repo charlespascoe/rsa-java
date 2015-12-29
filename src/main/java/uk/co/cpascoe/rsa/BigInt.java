@@ -178,6 +178,14 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
+    public BigInt add(int other) {
+        BigInt result = new BigInt(this.digits);
+
+        if (other > 0) result.addToDigit(other, 0);
+
+        return result;
+    }
+
     public BigInt subtract(BigInt other) {
         if (this.lessThan(other)) throw new Error("Cannot subtract a number from a smaller number (yet)");
 
@@ -186,6 +194,14 @@ public class BigInt implements Comparable<BigInt> {
         for (int i = 0; i < other.digitCount(); i++) {
             result.subtractFromDigit(other.getDigit(i), i);
         }
+
+        return result;
+    }
+
+    public BigInt subtract(int other) {
+        BigInt result = new BigInt(this.digits);
+
+        if (other > 0) result.subtractFromDigit(other, 0);
 
         return result;
     }
@@ -475,6 +491,10 @@ public class BigInt implements Comparable<BigInt> {
 
     public boolean equals(BigInt other) {
         return this.compareTo(other) == 0;
+    }
+
+    public boolean equals(int other) {
+        return other >= 0 && this.digitCount() == 1 && this.digits[0] == other;
     }
 
     public int[] exportToIntArray() {
