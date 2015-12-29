@@ -9,6 +9,7 @@ public class BigIntTests {
         assertArrayEquals(new int[] {0}, new BigInt(0).exportToIntArray());
         assertArrayEquals(new int[] {1}, new BigInt(1).exportToIntArray());
         assertArrayEquals(new int[] {2048}, new BigInt(2048).exportToIntArray());
+        assertArrayEquals("int Constructor should ignore sign", new int[] {2048}, new BigInt(-2048).exportToIntArray());
     }
 
     @Test
@@ -147,7 +148,7 @@ public class BigIntTests {
     public void add() {
         BigInt x = new BigInt(1);
         BigInt y = new BigInt(2);
-        BigInt z = new BigInt((int)4294967295L);
+        BigInt z = new BigInt(new int[] {(int)4294967295L});
 
         assertArrayEquals("Correctly adds two single-digit BigInts", new int[] {3}, x.add(y).exportToIntArray());
         assertArrayEquals("Correctly adds two BigInts, resulting in a carry", new int[] {0,1}, x.add(z).exportToIntArray());
@@ -265,7 +266,6 @@ public class BigIntTests {
         assertArrayEquals("Exponentiation with single digits", new int[] {6}, new BigInt(2).powMod(new BigInt(1000000), new BigInt(10)).exportToIntArray());
         assertArrayEquals("Exponentiation with multiple digits", new int[] {1}, new BigInt(new int[] {(int)4294967295L,(int)4294967295L}).powMod(new BigInt(12345678), new BigInt(new int[] {0,0,1})).exportToIntArray());
         assertArrayEquals("Exponentiation with multiple digits", new int[] {1313419847, -576389566, 2}, new BigInt(new int[] {2,5}).powMod(new BigInt(new int[] {1,2,3,4,5,6,7,8,9,10}), new BigInt(new int[] {1,2,3})).exportToIntArray());
-
     }
 
     @Test

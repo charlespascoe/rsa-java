@@ -19,19 +19,32 @@ public class BigInt implements Comparable<BigInt> {
         public BigInt remainder() { return this.remainder; }
     }
 
+    /**
+     * The array of base 2^32 digits that represents the value of this BigInt
+     */
     private int[] digits;
+
+
     private BigInt[] powerOf2Multiples = null;
 
+    /**
+     * Creates a new instance of a BigInt using the given int - the sign will be ignored
+     */
     public BigInt(int value) {
+        if (value < 0) value = -value;
+
         this.digits = new int[] {value};
     }
 
+    /**
+     * Creates a new instance of a BigInt using the given little-endian digit array
+     */
     public BigInt(int[] digits) {
         this.digits = Arrays.copyOf(digits, digits.length);
     }
 
     /**
-     * Creates new new instance of a BigInt using the given little-endian byte array
+     * Creates a new instance of a BigInt using the given little-endian byte array
      */
     public BigInt(byte[] data) {
         int digit = 0;
@@ -43,6 +56,9 @@ public class BigInt implements Comparable<BigInt> {
         }
     }
 
+    /**
+     * Returns the number of digits (i.e. the position of the highest-order non-zero digit, plus 1)
+     */
     public int digitCount() {
         for (int i = this.digits.length - 1; i >= 0; i--) {
             if (this.digits[i] != 0) {
@@ -53,6 +69,9 @@ public class BigInt implements Comparable<BigInt> {
         return 1;
     }
 
+    /**
+     * Returns the number of bits (i.e. the position of the highest-order non-zero bit, plus 1)
+     */
     public int bitCount() {
         for (int i = (this.digits.length * 32) - 1; i >= 0; i--) {
             if (this.getBitAt(i) > 0) {
@@ -63,6 +82,9 @@ public class BigInt implements Comparable<BigInt> {
         return 0;
     }
 
+    /**
+     * Returns the index of lowest non-zero bit, or -1 if there are no set bits
+     */
     public int getLowestSetBit() {
         for (int i = 0; i < (this.digits.length * 32); i++) {
             if (this.getBitAt(i) > 0) {
@@ -73,11 +95,20 @@ public class BigInt implements Comparable<BigInt> {
         return -1;
     }
 
+    /**
+     * Gets the bit (0 or 1) at the specified zero-based index
+     */
     public int getBitAt(int bitIndex) {
         int digitIndex = bitIndex / 32;
         return (this.getDigit(digitIndex) & (1 << (bitIndex % 32))) == 0 ? 0 : 1;
     }
 
+
+    /**
+     * Sets the bit at the specified index
+     * @param value The value of the bit - any non-zero value is assumed to be 1
+     * @param bitIndex The zero-based index of the bit to set
+     */
     protected void setBitAt(int value, int bitIndex) {
         if (value != 0) value = 1;
 
@@ -89,6 +120,10 @@ public class BigInt implements Comparable<BigInt> {
         }
     }
 
+    /**
+     * Gets the base 2^32 digit at the specified index
+     * @param index The index of the digit - an out-of-range index will return 0
+     */
     public int getDigit(int index) {
         if (index >= 0 && index < this.digits.length) {
             return this.digits[index];
@@ -97,6 +132,11 @@ public class BigInt implements Comparable<BigInt> {
         return 0;
     }
 
+    /**
+     * Sets the digit at the specified index
+     * @param digit The base 2^32 digit
+     * @param index The index of the digit - less than 0 will be ignored, greater than the digit count is automatically handled
+     */
     protected void setDigit(int digit, int index) {
         if (index < 0) return;
         if (index >= this.digits.length) {
@@ -106,6 +146,10 @@ public class BigInt implements Comparable<BigInt> {
         this.digits[index] = digit;
     }
 
+    /**
+     * Shifts all digits along, ignoring any fractional components
+     * @param shift The number of digits to move along (like multiplying by base^shift)
+     */
     protected BigInt shiftDigits(int shift) {
         if (this.digitCount() + shift <= 0) return new BigInt(0);
 
@@ -124,6 +168,11 @@ public class BigInt implements Comparable<BigInt> {
         return new BigInt(newDigits);
     }
 
+    /**
+     * Adds the given digit to the digit at ths specified index (handles carry)
+     * @param digit The base 2^32 digit to add
+     * @param index The index of the digit to add to
+     */
     protected void addToDigit(int digit, int index) {
         boolean carry = false;
         long unsignedDigit = MathUtils.unsignedInt(digit);
@@ -140,6 +189,11 @@ public class BigInt implements Comparable<BigInt> {
         if (carry) this.addToDigit(1, index + 1);
     }
 
+    /**
+     * Subtracts the given digit to the digit at ths specified index (handles carry)
+     * @param digit The base 2^32 digit to subtract
+     * @param index The index of the digit to subtract from
+     */
     protected void subtractFromDigit(int digit, int index) {
         // N.B.: This will run forever if the digit to subtract is larger than the digit at this position
         // and this digit is the highest-order digit
@@ -158,6 +212,9 @@ public class BigInt implements Comparable<BigInt> {
         if (carry) this.subtractFromDigit(1, index + 1);
     }
 
+    /**
+     * Returns the result of the addition of this BigInt and the given BigInt
+     */
     public BigInt add(BigInt other) {
         BigInt result = new BigInt(this.digits);
 
@@ -168,6 +225,9 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
+    /**
+     * Returns the result of the addition of this BigInt and the given int
+     */
     public BigInt add(int other) {
         BigInt result = new BigInt(this.digits);
 
@@ -176,6 +236,9 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
+    /**
+     * Returns the result of this BigInt minus the given BigInt
+     */
     public BigInt subtract(BigInt other) {
         if (this.lessThan(other)) throw new Error("Cannot subtract a number from a smaller number (yet)");
 
@@ -188,6 +251,9 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
+    /**
+     * Returns the result of this BigInt minus the given int
+     */
     public BigInt subtract(int other) {
         BigInt result = new BigInt(this.digits);
 
@@ -201,6 +267,9 @@ public class BigInt implements Comparable<BigInt> {
         return modulus.subtract(other.subtract(this).mod(modulus));
     }
 
+    /**
+     * Returns the result of the multiplication of this BigInt and the given BigInt
+     */
     public BigInt multiply(BigInt other) {
         BigInt result = new BigInt(0);
 
@@ -302,6 +371,9 @@ public class BigInt implements Comparable<BigInt> {
         }
     }
 
+    /**
+     * Returns the DivisionResult (quotient and remainder) of this BigInt divided by the given BigInt divisor
+     */
     public BigInt.DivisionResult divide(BigInt divisor) {
         if (this.lessThan(divisor)) return new BigInt.DivisionResult(new BigInt(0), this);
 
@@ -320,14 +392,23 @@ public class BigInt implements Comparable<BigInt> {
         return new BigInt.DivisionResult(quotient, remainder);
     }
 
+    /**
+     * Returns the quotient of this BigInt divided by the given BigInt divisor
+     */
     public BigInt quotient(BigInt divisor) {
         return this.divide(divisor).quotient();
     }
 
+    /**
+     * Returns the remainder of this BigInt modulo the given BigInt modulus
+     */
     public BigInt mod(BigInt modulus) {
         return this.divide(modulus).remainder();
     }
 
+    /**
+     * Returns the modular multiplicative inverse of this BigInt modulo the given BigInt modulus
+     */
     public BigInt modInverse(BigInt modulus) {
         BigInt t = new BigInt(0);
         BigInt r = modulus;
@@ -384,11 +465,11 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     /**
-     * Uses the Miller-Rabin primality test to check whether or not this number is probably prime with 15 trials
+     * Uses the Miller-Rabin primality test to check whether or not this number is probably prime with 10 trials
      * @return True if probably prime, false if definitely not prime
      */
     public boolean isProbablePrime() {
-        return this.isProbablePrime(15);
+        return this.isProbablePrime(10);
     }
 
     /**
