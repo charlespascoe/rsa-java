@@ -78,7 +78,7 @@ public class BigInt implements Comparable<BigInt> {
         return (this.getDigit(digitIndex) & (1 << (bitIndex % 32))) == 0 ? 0 : 1;
     }
 
-    public void setBitAt(int value, int bitIndex) {
+    protected void setBitAt(int value, int bitIndex) {
         if (value != 0) value = 1;
 
         int digit = this.getDigit(bitIndex / 32);
@@ -97,7 +97,7 @@ public class BigInt implements Comparable<BigInt> {
         return 0;
     }
 
-    public void setDigit(int digit, int index) {
+    protected void setDigit(int digit, int index) {
         if (index < 0) return;
         if (index >= this.digits.length) {
             this.digits = Arrays.copyOf(this.digits, index + 1);
@@ -106,7 +106,7 @@ public class BigInt implements Comparable<BigInt> {
         this.digits[index] = digit;
     }
 
-    public BigInt shiftDigits(int shift) {
+    protected BigInt shiftDigits(int shift) {
         if (this.digitCount() + shift <= 0) return new BigInt(0);
 
         int[] newDigits = new int[this.digitCount() + shift];
@@ -124,7 +124,7 @@ public class BigInt implements Comparable<BigInt> {
         return new BigInt(newDigits);
     }
 
-    public void addToDigit(int digit, int index) {
+    protected void addToDigit(int digit, int index) {
         boolean carry = false;
         long unsignedDigit = MathUtils.unsignedInt(digit);
         long unsignedCurrentDigit = MathUtils.unsignedInt(this.getDigit(index));
@@ -140,7 +140,7 @@ public class BigInt implements Comparable<BigInt> {
         if (carry) this.addToDigit(1, index + 1);
     }
 
-    public void subtractFromDigit(int digit, int index) {
+    protected void subtractFromDigit(int digit, int index) {
         // N.B.: This will run forever if the digit to subtract is larger than the digit at this position
         // and this digit is the highest-order digit
         boolean carry = false;
@@ -259,7 +259,7 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
-    public BigInt[] getPowerOf2Multiples(int n) {
+    protected BigInt[] getPowerOf2Multiples(int n) {
         if (this.powerOf2Multiples == null) {
             this.powerOf2Multiples = new BigInt[] {this};
         }
@@ -277,7 +277,7 @@ public class BigInt implements Comparable<BigInt> {
         return Arrays.copyOf(this.powerOf2Multiples, n);
     }
 
-    public void shiftBitsUp() {
+    protected void shiftBitsUp() {
         boolean carry = false;
         boolean prevCarry = false;
 
