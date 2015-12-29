@@ -49,6 +49,14 @@ public class BigIntTests {
     }
 
     @Test
+    public void byteCount() {
+        assertEquals(0, new BigInt(0).byteCount());
+        assertEquals(1, new BigInt(1).byteCount());
+        assertEquals(1, new BigInt(255).byteCount());
+        assertEquals(2, new BigInt(256).byteCount());
+    }
+
+    @Test
     public void getBitAt() {
         assertEquals(0, new BigInt(0).getBitAt(0));
         assertEquals(1, new BigInt(1).getBitAt(0));
@@ -298,9 +306,9 @@ public class BigIntTests {
 
     @Test
     public void exportToByteArray() {
-        assertArrayEquals(new byte[] {1,0,0,0}, new BigInt(1).exportToByteArray());
-        assertArrayEquals(new byte[] {1,1,0,0}, new BigInt(257).exportToByteArray());
-        assertArrayEquals(new byte[] {(byte)255,(byte)255,0,0}, new BigInt(65535).exportToByteArray());
+        assertArrayEquals(new byte[] {1}, new BigInt(1).exportToByteArray());
+        assertArrayEquals(new byte[] {1,1}, new BigInt(257).exportToByteArray());
+        assertArrayEquals(new byte[] {(byte)255,(byte)255}, new BigInt(65535).exportToByteArray());
     }
 }
 

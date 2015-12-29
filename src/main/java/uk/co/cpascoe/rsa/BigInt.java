@@ -70,6 +70,13 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     /**
+     * Returns the number of bytes needed to represent this number
+     */
+    public int byteCount() {
+        return MathUtils.divCeil(this.bitCount(), 8);
+    }
+
+    /**
      * Returns the number of bits (i.e. the position of the highest-order non-zero bit, plus 1)
      */
     public int bitCount() {
@@ -582,7 +589,8 @@ public class BigInt implements Comparable<BigInt> {
             }
         }
 
-        return output;
+        // Resize it to remove any high-order zeros
+        return Arrays.copyOf(output, this.byteCount());
     }
 }
 
