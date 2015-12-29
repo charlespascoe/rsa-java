@@ -348,7 +348,7 @@ public class BigInt implements Comparable<BigInt> {
         // Intermediate variable for swapping variables
         BigInt tmp;
 
-        while (!nextR.equals(new BigInt(0))) {
+        while (!nextR.equals(0)) {
             BigInt.DivisionResult divResult = r.divide(nextR);
 
             tmp = nextT;
@@ -412,12 +412,12 @@ public class BigInt implements Comparable<BigInt> {
 
             if (p.greaterThanOrEqual(this)) break;
 
-            if (this.mod(p).equals(new BigInt(0))) {
+            if (this.mod(p).equals(0)) {
                 return false;
             }
         }
 
-        BigInt nMinusOne = this.subtract(new BigInt(1));
+        BigInt nMinusOne = this.subtract(1);
 
         // n - 1 = 2^s * d
         int s = nMinusOne.getLowestSetBit();
@@ -426,17 +426,17 @@ public class BigInt implements Comparable<BigInt> {
         Random r = new SecureRandom();
 
         for (int i = 0; i < certainty; i++) {
-            BigInt a = MathUtils.randomBigInt(new BigInt(2), this.subtract(new BigInt(2)), r);
+            BigInt a = MathUtils.randomBigInt(new BigInt(2), this.subtract(2), r);
 
             BigInt x = a.powMod(d, this);
 
-            if (!x.equals(new BigInt(1)) && !x.equals(nMinusOne)) {
+            if (!x.equals(1) && !x.equals(nMinusOne)) {
                 boolean solutionFound = false;
 
                 for (int j = 0; j < s; j++) {
                     x = x.multiply(x).mod(this);
 
-                    if (x.equals(new BigInt(1))) {
+                    if (x.equals(1)) {
                         return false;
                     }
 
