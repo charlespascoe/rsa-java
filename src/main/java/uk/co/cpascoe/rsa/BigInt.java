@@ -43,16 +43,6 @@ public class BigInt implements Comparable<BigInt> {
         }
     }
 
-    public BigInt(String value) {
-        this(value, 10);
-    }
-
-    public BigInt(String value, int base) {
-    }
-
-    public BigInt(int numBits, Random random) {
-    }
-
     public int digitCount() {
         for (int i = this.digits.length - 1; i >= 0; i--) {
             if (this.digits[i] != 0) {
