@@ -15,7 +15,7 @@ public abstract class Utils {
      */
     public static boolean isValidHex(String str) {
         if (str == null) return false;
-        Pattern p = Pattern.compile("^[0-9A-Fa-f]+$");
+        Pattern p = Pattern.compile("^([0-9A-Fa-f]{2})+$");
         return p.matcher(str).matches();
     }
 

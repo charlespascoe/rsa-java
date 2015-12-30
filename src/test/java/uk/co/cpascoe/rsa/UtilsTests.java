@@ -8,23 +8,17 @@ import java.io.IOException;
 
 public class UtilsTests {
     @Test
-    public void isValidHexShouldReturnTrueForValidSingleDigitHex() {
-        assertTrue("It should return true for a single digit '0'", Utils.isValidHex("0"));
-        assertTrue("Another numeric digit", Utils.isValidHex("1"));
-        assertTrue("Another numeric digit", Utils.isValidHex("9"));
-        assertTrue("It should return true for the uppercase letter 'A'", Utils.isValidHex("A"));
-        assertTrue("It should return true for the lowercase letter 'a'", Utils.isValidHex("a"));
-        assertTrue(Utils.isValidHex("F"));
-        assertTrue(Utils.isValidHex("f"));
-    }
-
-    @Test
-    public void isValidHexShouldReturnTrueForValidMultiDigitHex() {
+    public void isValidHexShouldReturnTrueForValidHex() {
         assertTrue(Utils.isValidHex("00"));
+        assertTrue(Utils.isValidHex("01"));
         assertTrue(Utils.isValidHex("99"));
+        assertTrue(Utils.isValidHex("AA"));
+        assertTrue(Utils.isValidHex("aA"));
+        assertTrue(Utils.isValidHex("FF"));
+        assertTrue(Utils.isValidHex("ff"));
         assertTrue(Utils.isValidHex("AF"));
         assertTrue(Utils.isValidHex("Fa"));
-        assertTrue(Utils.isValidHex("12a"));
+        assertTrue(Utils.isValidHex("12ab"));
         assertTrue(Utils.isValidHex("abc123"));
     }
 
@@ -32,6 +26,7 @@ public class UtilsTests {
     public void isValidHexShouldReturnFalseForInvalidHex() {
         assertFalse(Utils.isValidHex(null));
         assertFalse(Utils.isValidHex(""));
+        assertFalse("Single-digit hex not valid", Utils.isValidHex("0"));
         assertFalse(Utils.isValidHex("!?!?!?"));
         assertFalse(Utils.isValidHex("123z"));
         assertFalse(Utils.isValidHex("-1 + 3"));
