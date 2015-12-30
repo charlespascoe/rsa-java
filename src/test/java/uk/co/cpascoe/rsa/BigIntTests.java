@@ -104,6 +104,57 @@ public class BigIntTests {
     }
 
     @Test
+    public void shiftBitsUp() {
+        BigInt x = new BigInt(1);
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {2}, x.exportToIntArray());
+        x = new BigInt(3);
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {6}, x.exportToIntArray());
+        x = new BigInt(new int[] {1,2,3,4});
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {2,4,6,8}, x.exportToIntArray());
+        x = new BigInt(new int[] {(int)4294967295L});
+        x.shiftBitsUp();
+        assertArrayEquals(new int[] {(int)4294967294L,1}, x.exportToIntArray());
+    }
+
+    @Test
+    public void shiftBitsDown() {
+        BigInt x = new BigInt(1);
+        x.shiftBitsDown();
+        assertArrayEquals(new int[] {0}, x.exportToIntArray());
+        x = new BigInt(2);
+        x.shiftBitsDown();
+        assertArrayEquals(new int[] {1}, x.exportToIntArray());
+        x = new BigInt(new int[] {3,7});
+        x.shiftBitsDown();
+        assertArrayEquals(new int[] {Constants.BIT_MASKS[31] + 1, 3}, x.exportToIntArray());
+        x = new BigInt(new int[] {(int)4294967295L});
+        x.shiftBitsDown();
+        assertArrayEquals(new int[] {Constants.BIT_MASKS[31] - 1}, x.exportToIntArray());
+    }
+
+    @Test
+    public void shiftBits() {
+        assertArrayEquals(new int[] {2}, new BigInt(1).shiftBits(1).exportToIntArray());
+        assertArrayEquals(new int[] {8}, new BigInt(1).shiftBits(3).exportToIntArray());
+        assertArrayEquals(new int[] {24}, new BigInt(3).shiftBits(3).exportToIntArray());
+        assertArrayEquals(new int[] {3}, new BigInt(24).shiftBits(-3).exportToIntArray());
+        assertArrayEquals(new int[] {0,6}, new BigInt(3).shiftBits(33).exportToIntArray());
+        assertArrayEquals(new int[] {3}, new BigInt(new int[] {0,6}).shiftBits(-33).exportToIntArray());
+    }
+
+    @Test
+    public void maskLowerBits() {
+        assertArrayEquals(new int[] {0}, new BigInt(1).maskLowerBits(0).exportToIntArray());
+        assertArrayEquals(new int[] {0}, new BigInt(2).maskLowerBits(1).exportToIntArray());
+        assertArrayEquals(new int[] {1}, new BigInt(3).maskLowerBits(1).exportToIntArray());
+        assertArrayEquals(new int[] {3}, new BigInt(7).maskLowerBits(2).exportToIntArray());
+        assertArrayEquals(new int[] {123,4}, new BigInt(new int[] {123,12}).maskLowerBits(35).exportToIntArray());
+    }
+
+    @Test
     public void getDigit() {
         assertEquals("It should return 0 for an out-of-range index", 0, new BigInt(1).getDigit(1024));
         assertEquals("It should return the digit for a valid index", 1, new BigInt(1).getDigit(0));
@@ -223,22 +274,6 @@ public class BigIntTests {
             assertTrue(pow2Multiples[i].equals(x.multiply(new BigInt(p2))));
             p2 *= 2;
         }
-    }
-
-    @Test
-    public void shiftBitsUp() {
-        BigInt x = new BigInt(1);
-        x.shiftBitsUp();
-        assertArrayEquals(new int[] {2}, x.exportToIntArray());
-        x = new BigInt(3);
-        x.shiftBitsUp();
-        assertArrayEquals(new int[] {6}, x.exportToIntArray());
-        x = new BigInt(new int[] {1,2,3,4});
-        x.shiftBitsUp();
-        assertArrayEquals(new int[] {2,4,6,8}, x.exportToIntArray());
-        x = new BigInt(new int[] {(int)4294967295L});
-        x.shiftBitsUp();
-        assertArrayEquals(new int[] {(int)4294967294L,1}, x.exportToIntArray());
     }
 
     @Test

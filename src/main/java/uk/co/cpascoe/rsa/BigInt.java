@@ -127,6 +127,87 @@ public class BigInt implements Comparable<BigInt> {
         }
     }
 
+    protected void shiftBitsUp() {
+        boolean carry = false;
+        boolean prevCarry = false;
+
+        int digitCount = this.digitCount();
+
+        for (int i = 0; i < digitCount; i++) {
+            int digit = this.getDigit(i);
+
+            carry = (digit & Constants.BIT_MASKS[31]) != 0;
+
+            digit <<= 1;
+
+            if (prevCarry) digit++;
+
+            this.setDigit(digit, i);
+
+            prevCarry = carry;
+        }
+
+        if (carry) {
+            this.setDigit(1, digitCount);
+        }
+    }
+
+    protected void shiftBitsDown() {
+        boolean carry = false;
+        boolean prevCarry = false;
+
+        int digitCount = this.digitCount();
+
+        for (int i = digitCount - 1; i >= 0; i--) {
+            int digit = this.getDigit(i);
+
+            carry = (digit & 1) != 0;
+
+            digit >>>= 1;
+
+            if (prevCarry) digit += Constants.BIT_MASKS[31];
+
+            this.setDigit(digit, i);
+
+            prevCarry = carry;
+        }
+    }
+
+    public BigInt shiftBits(int bits) {
+        BigInt result = new BigInt(this.digits);
+
+        if (bits / 32 != 0)
+            result = result.shiftDigits(bits / 32);
+
+        // N.B.: in Java, -33 mod 32 = -1
+        bits = bits % 32;
+
+        if (bits >= 0) {
+            for (int i = 0; i < bits; i++) {
+                result.shiftBitsUp();
+            }
+        } else {
+            bits = -bits;
+            for (int i = 0; i < bits; i++) {
+                result.shiftBitsDown();
+            }
+        }
+
+        return result;
+    }
+
+    protected BigInt maskLowerBits(int bits) {
+        int[] newDigits = Arrays.copyOf(this.digits, MathUtils.divCeil(bits, 32));
+
+        if (bits % 32 != 0) {
+            // If the mask does not align with a digit,
+            // then mask off the last bits of the last digit that are not needed
+            newDigits[newDigits.length - 1] &= 0xFFFFFFFF >>> (32 - (bits % 32));
+        }
+
+        return new BigInt(newDigits);
+    }
+
     /**
      * Gets the base 2^32 digit at the specified index
      * @param index The index of the digit - an out-of-range index will return 0
@@ -361,31 +442,6 @@ public class BigInt implements Comparable<BigInt> {
         }
 
         return Arrays.copyOf(this.powerOf2Multiples, n);
-    }
-
-    protected void shiftBitsUp() {
-        boolean carry = false;
-        boolean prevCarry = false;
-
-        int digitCount = this.digitCount();
-
-        for (int i = 0; i < digitCount; i++) {
-            int digit = this.getDigit(i);
-
-            carry = (digit & Constants.BIT_MASKS[31]) != 0;
-
-            digit <<= 1;
-
-            if (prevCarry) digit++;
-
-            this.setDigit(digit, i);
-
-            prevCarry = carry;
-        }
-
-        if (carry) {
-            this.setDigit(1, digitCount);
-        }
     }
 
     /**
