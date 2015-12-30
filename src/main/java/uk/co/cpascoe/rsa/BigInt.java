@@ -239,6 +239,7 @@ public class BigInt implements Comparable<BigInt> {
      * @param shift The number of digits to move along (like multiplying by base^shift)
      */
     protected BigInt shiftDigits(int shift) {
+        if (shift == 0) return new BigInt(this.digits);
         if (this.digitCount() + shift <= 0) return new BigInt(0);
 
         int[] newDigits = new int[this.digitCount() + shift];
