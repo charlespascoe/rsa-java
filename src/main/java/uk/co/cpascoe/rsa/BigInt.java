@@ -525,6 +525,9 @@ public class BigInt implements Comparable<BigInt> {
     }
 
     public BigInt powMod(BigInt exponent, BigInt modulus) {
+        if (modulus.getBitAt(0) == 1)
+            return this.montgomeryPowMod(exponent, modulus);
+
         BigInt result = new BigInt(1);
         BigInt base = this;
 
@@ -536,6 +539,43 @@ public class BigInt implements Comparable<BigInt> {
         }
 
         return result;
+    }
+
+    protected BigInt montgomeryPowMod(BigInt exponent, BigInt modulus) {
+        if (modulus.getBitAt(0) != 1) throw new Error("Modulus must be odd for Montgomery Exponentation");
+
+        // r = 2^k and m mod 2 = 1, therefore gcd(r, m) = 1
+        int k = modulus.bitCount();
+        BigInt r = new BigInt(1).shiftBits(k);
+
+        BigInt rInverse = r.modInverse(modulus);
+        BigInt modulusDash = r.subtract(modulus.modInverse(r));
+
+        // baseR = base * r mod modulus ('this' is the base)
+        BigInt baseR = this.shiftBits(k).mod(modulus);
+        // resultR = result * r (result initially 1)
+        BigInt resultR = r.mod(modulus);
+
+        for (int i = 0; i < exponent.bitCount(); i++) {
+            if (exponent.getBitAt(i) == 1) {
+                resultR = BigInt.montgomeryMultiplication(resultR, baseR, modulus, modulusDash, k);
+            }
+
+            baseR = BigInt.montgomeryMultiplication(baseR, baseR, modulus, modulusDash, k);
+        }
+
+        // result * r * r^-1 mod modulus = result
+        return resultR.multiply(rInverse).mod(modulus);
+    }
+
+    protected static BigInt montgomeryMultiplication(BigInt arModm, BigInt brModm, BigInt m, BigInt mDash, int k) {
+        BigInt t = arModm.multiply(brModm);
+
+        BigInt u = t.add(t.multiply(mDash).maskLowerBits(k).multiply(m)).shiftBits(-k);
+
+        if (u.greaterThanOrEqual(m)) u = u.subtract(m);
+
+        return u;
     }
 
     /**

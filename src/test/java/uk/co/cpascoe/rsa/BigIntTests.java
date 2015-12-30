@@ -315,7 +315,28 @@ public class BigIntTests {
     public void powMod() {
         assertArrayEquals("Exponentiation with single digits", new int[] {6}, new BigInt(2).powMod(new BigInt(1000000), new BigInt(10)).exportToIntArray());
         assertArrayEquals("Exponentiation with multiple digits", new int[] {1}, new BigInt(new int[] {(int)4294967295L,(int)4294967295L}).powMod(new BigInt(12345678), new BigInt(new int[] {0,0,1})).exportToIntArray());
+        assertArrayEquals(new int[] {1}, new BigInt(3).powMod(new BigInt(6), new BigInt(7)).exportToIntArray());
+        assertArrayEquals(new int[] {123}, new BigInt(new int[] {123}).powMod(new BigInt(new int[] {1,2,3}), new BigInt(65537)).exportToIntArray());
         assertArrayEquals("Exponentiation with multiple digits", new int[] {1313419847, -576389566, 2}, new BigInt(new int[] {2,5}).powMod(new BigInt(new int[] {1,2,3,4,5,6,7,8,9,10}), new BigInt(new int[] {1,2,3})).exportToIntArray());
+    }
+
+    @Test
+    public void montgomeryMultiplication() {
+        BigInt m = new BigInt(13);
+        BigInt r = new BigInt(1).shiftBits(m.bitCount());
+
+        BigInt rInverse = r.modInverse(m);
+        BigInt mDash = r.subtract(m.modInverse(r));
+
+        assertTrue(r.equals(16));
+
+        BigInt a = new BigInt(5);
+        BigInt b = new BigInt(9);
+
+        BigInt arModM = a.multiply(r).mod(m);
+        BigInt brModM = b.multiply(r).mod(m);
+
+        assertArrayEquals(new int[] {5}, BigInt.montgomeryMultiplication(arModM, brModM, m, mDash, m.bitCount()).exportToIntArray());
     }
 
     @Test
