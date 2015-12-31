@@ -44,13 +44,6 @@ public class OaepProviderTests {
         } catch (Exception ex) {
             fail("Unexpected exception: " + ex.toString());
         }
-
-        try {
-            OaepProvider.buildDataBlock(labelHash, new byte[8], maxMessageLength);
-            fail("An exception should be thrown when the message is too long");
-        } catch (Exception ex) {
-            assertTrue("An exception was thrown when the message was too long", true);
-        }
     }
 
     @Test
@@ -62,7 +55,6 @@ public class OaepProviderTests {
             OaepProvider.buildDataBlock(labelHash, new byte[8], maxMessageLength);
             fail("An exception should be thrown when the message is too long");
         } catch (Exception ex) {
-            assertTrue(true);
         }
     }
 
@@ -125,7 +117,6 @@ public class OaepProviderTests {
         OaepProvider o = this.createOaepProvider();
         try {
             o.decode(new byte[256], 256, new byte[o.getDigestLength()], true);
-            o.decode(new byte[254], 256, new byte[o.getDigestLength()], true);
             fail("An exception should be thrown when the encoded message block is the incorrect length");
         } catch (Exception ex) {
             assertTrue(true);
@@ -137,10 +128,8 @@ public class OaepProviderTests {
         OaepProvider o = this.createOaepProvider();
         try {
             o.decode(new byte[3], 4, new byte[o.getDigestLength()], true);
-            fail("An exception should be thrown when the encoded message block is the incorrect length");
-        } catch (Exception ex) {
-            //assertTrue(true);
-        }
+            fail("An exception should be thrown when the key size is too small");
+        } catch (Exception ex) {}
     }
 
     @Test
