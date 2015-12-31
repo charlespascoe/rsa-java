@@ -132,8 +132,6 @@ public class OaepProvider {
             labelHash = this.hash(label);
         }
 
-
-
         byte[] maskedSeed = Utils.takeBytes(encMsgBlock, this.getDigestLength());
         byte[] maskedDataBlock = Utils.removeBytes(encMsgBlock, this.getDigestLength());
 
@@ -142,6 +140,10 @@ public class OaepProvider {
 
         byte[] decodedLabelHash = Utils.takeBytes(dataBlock, this.getDigestLength());
         byte[] decodedPaddedMessage = Utils.removeBytes(dataBlock, this.getDigestLength());
+
+        if (!Utils.constantTimeEquals(labelHash, decodedLabelHash)) {
+            throw new DecodingException("Label hashes do not match");
+        }
 
         return OaepProvider.removePadding(decodedPaddedMessage);
     }

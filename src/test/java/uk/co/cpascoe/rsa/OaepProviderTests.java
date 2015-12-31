@@ -133,6 +133,21 @@ public class OaepProviderTests {
     }
 
     @Test
+    public void decodeShouldThrowExceptionWhenLabelHashDoesNotMatch() {
+        OaepProvider o = this.createOaepProvider();
+        byte[] msg = new byte[] {1,2,3,4};
+        byte[] label = new byte[] {5,6,7,8};
+
+        try {
+            byte[] encodedDataBlock = o.encode(msg, 256, label);
+            o.decode(encodedDataBlock, 256, new byte[] {5,6,7,9});
+            fail("A DecodingException should have been thrown");
+        } catch (OaepProvider.EncodingException ex) {
+            fail("Unexpected EncodingException: " + ex.toString());
+        } catch (OaepProvider.DecodingException ex) {}
+    }
+
+    @Test
     public void decodeShouldReturnCorrectOutput() {
         OaepProvider o = this.createOaepProvider();
 
