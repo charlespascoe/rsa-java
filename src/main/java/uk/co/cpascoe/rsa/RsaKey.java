@@ -27,6 +27,10 @@ public class RsaKey {
         this.e = new BigInt(Utils.base64ToBytes(data.get("e")));
     }
 
+    public int byteCount() {
+        return this.n.byteCount();
+    }
+
     public BigInt publicExponentation(BigInt val) {
         return val.powMod(this.e, this.n);
     }
