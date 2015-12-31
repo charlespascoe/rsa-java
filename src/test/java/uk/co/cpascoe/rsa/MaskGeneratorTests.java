@@ -20,15 +20,19 @@ public class MaskGeneratorTests {
     }
 
     @Test
-    public void shouldReturnCorrectDigestLength() throws NoSuchAlgorithmException {
-        MaskGenerator mg = new MaskGenerator("SHA-256");
-        assertEquals(mg.getDigestLength(), 32);
+    public void shouldReturnCorrectDigestLength() {
+        try {
+            MaskGenerator mg = new MaskGenerator("SHA-256");
+            assertEquals(mg.getDigestLength(), 32);
 
-        mg = new MaskGenerator("SHA-384");
-        assertEquals(mg.getDigestLength(), 48);
+            mg = new MaskGenerator("SHA-384");
+            assertEquals(mg.getDigestLength(), 48);
 
-        mg = new MaskGenerator("MD5");
-        assertEquals(mg.getDigestLength(), 16);
+            mg = new MaskGenerator("MD5");
+            assertEquals(mg.getDigestLength(), 16);
+        } catch (NoSuchAlgorithmException ex) {
+            fail("Unexpected exception: " + ex.toString());
+        }
     }
 
     @Test
@@ -41,7 +45,7 @@ public class MaskGeneratorTests {
     }
 
     @Test
-    public void shouldGenerateCorrectLengthOfData() throws NoSuchAlgorithmException {
+    public void shouldGenerateCorrectLengthOfData() {
         MaskGenerator mg = this.createMaskGen();
 
         for (int i = 0; i <= 256; i++) {
@@ -50,7 +54,7 @@ public class MaskGeneratorTests {
     }
 
     @Test
-    public void shouldBeDeterministic() throws NoSuchAlgorithmException {
+    public void shouldBeDeterministic() {
         MaskGenerator mg = this.createMaskGen();
 
         byte[] seed1 = new byte[] {1, 2, 3, 4, 5, 6, 7, 8};

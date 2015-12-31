@@ -30,7 +30,7 @@ public class MaskGenerator {
         return this.digestLength;
     }
 
-    public byte[] generateMask(byte[] seed, int length) throws NoSuchAlgorithmException {
+    public byte[] generateMask(byte[] seed, int length) {
         int lengthModDigestLength = length % this.digestLength;
 
         int blocks = (length / this.digestLength) + (lengthModDigestLength == 0 ? 0 : 1);
@@ -38,7 +38,15 @@ public class MaskGenerator {
         byte[] mask = new byte[length];
 
         for (int i = 0; i < blocks; i++) {
-            MessageDigest md = MessageDigest.getInstance(this.mdName);
+            MessageDigest md;
+
+            try {
+                md = MessageDigest.getInstance(this.mdName);
+            } catch (NoSuchAlgorithmException ex) {
+                // This should never run, as the MaskGenerator constructor should throw an exception
+                // if the message digest doesn't exist
+                throw new Error("Unexpected NoSuchAlgorithmException", ex);
+            }
 
             md.update(seed);
             md.update(MathUtils.intToBigEndianBytes(i));
