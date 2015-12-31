@@ -64,6 +64,20 @@ public class RsaProviderTests {
         }
     }
 
+    @Test
+    public void encrypt() {
+        RsaPrivateKey key = this.key();
+        RsaProvider rp = new RsaProvider(key);
 
+        byte[] data = new byte[] {1,2,3,4};
+
+        int expectedLength = key.byteCount() + ((data.length / 16) + 1) * 16;
+
+        try {
+            assertEquals(expectedLength, rp.encrypt(data).length);
+        } catch (Exception ex) {
+            fail("Unexpected Exception: " + ex.toString());
+        }
+    }
 }
 

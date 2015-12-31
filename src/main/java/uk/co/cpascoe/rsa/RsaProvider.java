@@ -1,8 +1,19 @@
 package uk.co.cpascoe.rsa;
 
+import java.io.*;
+import java.security.*;
 import java.util.Arrays;
+import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class RsaProvider {
+    public final static String CIPHER_NAME = "AES";
+    public final static String CIPHER_MODE = RsaProvider.CIPHER_NAME + "/CBC/PKCS5Padding";
+
+    public final static int KEY_SIZE = 128;
+    public final static int BLOCK_SIZE = 128;
+
     private final RsaKey rsaKey;
 
     public RsaProvider(RsaKey rsaKey) {
@@ -50,8 +61,46 @@ public class RsaProvider {
         }
     }
 
-    public byte[] encrypt(byte[] data) {
-        return new byte[0];
+    public void encrypt(InputStream input, OutputStream output) throws IOException, EncryptionException {
+        KeyGenerator keyGen;
+        Cipher cipher;
+        SecretKey key;
+
+        SecureRandom r = new SecureRandom();
+
+        byte[] iv = new byte[RsaProvider.BLOCK_SIZE / 8];
+        r.nextBytes(iv);
+
+        try {
+            keyGen = KeyGenerator.getInstance(RsaProvider.CIPHER_NAME);
+            keyGen.init(RsaProvider.KEY_SIZE, r);
+            key = keyGen.generateKey();
+
+            cipher = Cipher.getInstance(RsaProvider.CIPHER_MODE);
+            cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
+        } catch (Exception ex) {
+            throw new EncryptionException(ex);
+        }
+
+        output.write(this.encryptKey(Utils.concat(key.getEncoded(), iv)));
+
+        CipherOutputStream encryptedOutput = new CipherOutputStream(output, cipher);
+        Utils.pipeStream(input, encryptedOutput);
+        encryptedOutput.flush();
+        encryptedOutput.close();
+    }
+
+    public byte[] encrypt(byte[] data) throws EncryptionException {
+        ByteArrayInputStream input = new ByteArrayInputStream(data);
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        try {
+            this.encrypt(input, output);
+        } catch (IOException ex) {
+            throw new EncryptionException("Unexpected IOException", ex);
+        }
+
+        return output.toByteArray();
     }
 
     public byte[] decrypt(byte[] data) {
