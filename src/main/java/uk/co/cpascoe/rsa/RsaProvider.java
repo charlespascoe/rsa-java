@@ -5,6 +5,7 @@ public class RsaProvider {
     private RsaKey key;
 
     public RsaProvider(RsaKey key) {
+        if (key == null) throw new NullPointerException("key should not be null");
         this.key = key;
     }
 
