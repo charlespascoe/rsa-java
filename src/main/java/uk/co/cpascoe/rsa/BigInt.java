@@ -592,12 +592,12 @@ public class BigInt implements Comparable<BigInt> {
      * @return True if probably prime, false if definitely not prime
      */
     public boolean isProbablePrime(int certainty) {
-        for (int i = 0; i < 512; i++) {
-            BigInt p = Constants.SMALL_PRIMES_BIGINT[i];
+        for (int i = 0; i < 256; i++) {
+            BigInt p = Constants.SMALL_PRIMES[i];
 
             if (p.greaterThanOrEqual(this)) break;
 
-            if (this.mod(p).equals(0)) {
+            if (MathUtils.gcd(this, p).equals(p)) {
                 return false;
             }
         }
