@@ -90,6 +90,34 @@ public class RsaProvider {
         encryptedOutput.close();
     }
 
+    public void decrypt(InputStream input, OutputStream output) throws IOException, DecryptionException {
+        Cipher cipher;
+        SecretKey key;
+
+        byte[] encryptedKey = new byte[this.rsaKey.byteCount()];
+
+        input.read(encryptedKey);
+
+        byte[] keyAndIv = this.decryptKey(encryptedKey);
+
+        byte[] keyBytes = Utils.takeBytes(keyAndIv, RsaProvider.KEY_SIZE / 8);
+        byte[] iv = Utils.removeBytes(keyAndIv, keyBytes.length);
+
+        try {
+            key = new SecretKeySpec(keyBytes, RsaProvider.CIPHER_NAME);
+
+            cipher = Cipher.getInstance(RsaProvider.CIPHER_MODE);
+            cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+        } catch (Exception ex) {
+            throw new DecryptionException(ex);
+        }
+
+        CipherOutputStream decryptedOutput = new CipherOutputStream(output, cipher);
+        Utils.pipeStream(input, decryptedOutput);
+        decryptedOutput.flush();
+        decryptedOutput.close();
+    }
+
     public byte[] encrypt(byte[] data) throws EncryptionException {
         ByteArrayInputStream input = new ByteArrayInputStream(data);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -103,7 +131,16 @@ public class RsaProvider {
         return output.toByteArray();
     }
 
-    public byte[] decrypt(byte[] data) {
-        return new byte[0];
+    public byte[] decrypt(byte[] data) throws DecryptionException {
+        ByteArrayInputStream input = new ByteArrayInputStream(data);
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        try {
+            this.decrypt(input, output);
+        } catch (IOException ex) {
+            throw new DecryptionException("Unexpected IOException", ex);
+        }
+
+        return output.toByteArray();
     }
 }

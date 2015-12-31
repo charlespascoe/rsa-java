@@ -79,5 +79,19 @@ public class RsaProviderTests {
             fail("Unexpected Exception: " + ex.toString());
         }
     }
+
+    @Test
+    public void decrypt() {
+        RsaPrivateKey key = this.key();
+        RsaProvider rp = new RsaProvider(key);
+
+        byte[] data = new byte[] {1,2,3,4};
+
+        try {
+            assertArrayEquals(data, rp.decrypt(rp.encrypt(data)));
+        } catch (Exception ex) {
+            fail("Unexpected Exception: " + ex.toString());
+        }
+    }
 }
 
