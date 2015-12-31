@@ -640,11 +640,6 @@ public class BigInt implements Comparable<BigInt> {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "0";
-    }
-
     public int compareTo(BigInt other) {
         int diff = this.bitCount() - other.bitCount();
 
