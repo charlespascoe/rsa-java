@@ -31,16 +31,15 @@ public abstract class Utils {
      * Returns the result of the two byte arrays xored together
      *
      * @param a The first array
-     * @param b The second array, which must be the same length as 'a'
+     * @param b The second array, which can have a different length to 'a'
+     * @return The XORed values of the common bytes, of length min(a.length, b.length)
      */
-    public static byte[] xorBytes(byte[] a, byte[] b) throws Exception {
-        if (a.length != b.length) {
-            throw new Exception("Arrays have different lengths");
-        }
+    public static byte[] xorBytes(byte[] a, byte[] b) {
+        int length = Math.min(a.length, b.length);
 
-        byte[] out = new byte[a.length];
+        byte[] out = new byte[length];
 
-        for (int i = 0; i < out.length; i++) {
+        for (int i = 0; i < length; i++) {
             out[i] = (byte)(a[i] ^ b[i]);
         }
 

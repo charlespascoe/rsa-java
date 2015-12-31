@@ -34,28 +34,15 @@ public class UtilsTests {
     }
 
     @Test
-    public void xorBytesWithValidInput() {
-        try {
-            assertArrayEquals(new byte[] {}, Utils.xorBytes(new byte[] {}, new byte[] {}));
-            assertArrayEquals(new byte[] {0}, Utils.xorBytes(new byte[] {0}, new byte[] {0}));
-            assertArrayEquals(new byte[] {1}, Utils.xorBytes(new byte[] {0}, new byte[] {1}));
-            assertArrayEquals(new byte[] {0}, Utils.xorBytes(new byte[] {1}, new byte[] {1}));
-            assertArrayEquals(new byte[] {(byte)255}, Utils.xorBytes(new byte[] {(byte)170}, new byte[] {85}));
-            assertArrayEquals(new byte[] {(byte)170,85}, Utils.xorBytes(new byte[] {(byte)255,(byte)255}, new byte[] {85,(byte)170}));
-        } catch (Exception ex) {
-            fail("Unexpected Exception thrown: " + ex.toString());
-        }
-    }
-
-    @Test
-    public void xorByteWithInvalidInput() {
-        // TODO: Pass in nulls
-        try {
-            Utils.xorBytes(new byte[] {0}, new byte[] {0,0});
-            fail("An exception should have been thrown");
-        } catch (Exception ex) {
-            assertTrue(true);
-        }
+    public void xorBytes() {
+        assertArrayEquals(new byte[] {}, Utils.xorBytes(new byte[] {}, new byte[] {}));
+        assertArrayEquals(new byte[] {0}, Utils.xorBytes(new byte[] {0}, new byte[] {0}));
+        assertArrayEquals(new byte[] {1}, Utils.xorBytes(new byte[] {0}, new byte[] {1}));
+        assertArrayEquals(new byte[] {0}, Utils.xorBytes(new byte[] {1}, new byte[] {1}));
+        assertArrayEquals(new byte[] {(byte)255}, Utils.xorBytes(new byte[] {(byte)170}, new byte[] {85}));
+        assertArrayEquals(new byte[] {(byte)170,85}, Utils.xorBytes(new byte[] {(byte)255,(byte)255}, new byte[] {85,(byte)170}));
+        assertArrayEquals(new byte[] {(byte)170,85}, Utils.xorBytes(new byte[] {(byte)255,(byte)255}, new byte[] {85,(byte)170}));
+        assertArrayEquals("It should handle arrays of different lengths", new byte[] {(byte)170}, Utils.xorBytes(new byte[] {(byte)255,123}, new byte[] {85}));
     }
 
     @Test
