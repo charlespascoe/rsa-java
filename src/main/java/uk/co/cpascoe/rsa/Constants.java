@@ -2,6 +2,9 @@ package uk.co.cpascoe.rsa;
 
 public abstract class Constants {
     public static final long TWO_POW_32 = 4294967296L;
+
+    public static final long UNSIGNED_INT_MASK = 0xFFFFFFFFL;
+
     public static final int[] BIT_MASKS = new int[] {
         1,
         2,
