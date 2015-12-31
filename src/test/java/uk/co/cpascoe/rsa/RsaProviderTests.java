@@ -51,6 +51,19 @@ public class RsaProviderTests {
         }
     }
 
+    @Test
+    public void decryptKeyHappyPath() {
+        RsaProvider rp = new RsaProvider(this.key());
+        byte[] symmetricKey = new byte[] {1,2,3,4,5,6,7,8};
+
+        try {
+            byte[] encryptedKey = rp.encryptKey(symmetricKey);
+            assertArrayEquals(symmetricKey, rp.decryptKey(encryptedKey));
+        } catch (Exception ex) {
+            fail("Unexpected Exception: " + ex.toString());
+        }
+    }
+
 
 }
 

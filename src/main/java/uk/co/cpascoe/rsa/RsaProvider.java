@@ -33,6 +33,23 @@ public class RsaProvider {
         return Arrays.copyOf(c.exportToByteArray(), keyByteLength);
     }
 
+    protected byte[] decryptKey(byte[] encryptedKeyBlock) throws DecryptionException {
+        int keyByteLength = this.rsaKey.byteCount();
+
+        BigInt c = new BigInt(encryptedKeyBlock);
+        BigInt m = ((RsaPrivateKey)this.rsaKey).privateExponentation(c);
+
+        byte[] encodedBlock = Arrays.copyOf(m.exportToByteArray(), keyByteLength - 1);
+
+        OaepProvider oaep = new OaepProvider();
+
+        try {
+            return oaep.decode(encodedBlock, keyByteLength);
+        } catch (Exception ex) {
+            throw new DecryptionException(ex);
+        }
+    }
+
     public byte[] encrypt(byte[] data) {
         return new byte[0];
     }
