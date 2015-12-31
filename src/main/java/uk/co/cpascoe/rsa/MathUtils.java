@@ -78,10 +78,30 @@ public abstract class MathUtils {
     }
 
     public static BigInt gcd(BigInt a, BigInt b) {
-        if (a.equals(new BigInt(0))) return b;
-        if (b.equals(new BigInt(0))) return a;
-        if (a.greaterThan(b)) return MathUtils.gcd(a.mod(b), b);
-        return MathUtils.gcd(a, b.mod(a));
+        if (a.equals(0)) return b;
+        if (b.equals(0)) return a;
+
+        if (a.getBitAt(0) == 0) {
+            // a is even
+
+            if (b.getBitAt(0) == 0) {
+                return MathUtils.gcd(a.shiftBits(-1), b.shiftBits(-1)).shiftBits(1);
+            } else {
+                return MathUtils.gcd(a.shiftBits(-1), b);
+            }
+        } else {
+            // a is odd
+
+            if (b.getBitAt(0) == 0) {
+                return MathUtils.gcd(a, b.shiftBits(-1));
+            } else {
+                if (a.greaterThan(b)) {
+                    return MathUtils.gcd(a.subtract(b).shiftBits(-1), b);
+                } else {
+                    return MathUtils.gcd(a, b.subtract(a).shiftBits(-1));
+                }
+            }
+        }
     }
 
     public static BigInt randomBigInt(int bits, Random random) {
