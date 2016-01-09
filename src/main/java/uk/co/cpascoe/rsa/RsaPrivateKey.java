@@ -16,7 +16,12 @@ public class RsaPrivateKey extends RsaKey {
     protected BigInt dq;
     protected BigInt qinv;
 
-    public RsaPrivateKey(Map<String, String> data) throws Exception {
+    /**
+     * Creates a new RSA public key from the given data
+     * @param data A map containing the modulus and public exponent for the key
+     * @throws Exception
+     */
+    protected RsaPrivateKey(Map<String, String> data) throws Exception {
         super(data);
 
         if (!data.containsKey("p") ||
@@ -45,6 +50,10 @@ public class RsaPrivateKey extends RsaKey {
         this.qinv = new BigInt(Utils.hexToBytes(data.get("qinv")));
     }
 
+    /**
+     * Generates a new RSA key pair
+     * @param bits The desired number of bits in the modulus
+     */
     public RsaPrivateKey(int bits) {
         this.e = new BigInt(65537);
 
@@ -62,10 +71,16 @@ public class RsaPrivateKey extends RsaKey {
         this.qinv = this.q.modInverse(this.p);
     }
 
+    /**
+     * Computes the value of (val ^ d) mod n
+     */
     public BigInt privateExponentation(BigInt val) {
         return val.powMod(this.d, this.n);
     }
 
+    /**
+     * Efficiently computes the value of (val ^ d) mod n
+     */
     public BigInt fastPrivateExponentation(BigInt val) {
         BigInt m1 = val.powMod(this.dp, this.p);
         BigInt m2 = val.powMod(this.dq, this.q);
@@ -75,6 +90,9 @@ public class RsaPrivateKey extends RsaKey {
         return m2.add(h.multiply(this.q));
     }
 
+    /**
+     * Exports this key to a map
+     */
     @Override
     public Map<String, String> exportToMap() {
         Map<String, String> data = super.exportToMap();
@@ -90,10 +108,17 @@ public class RsaPrivateKey extends RsaKey {
         return data;
     }
 
+    /**
+     * Exports the public key information for this key
+     */
     public RsaKey exportPublicKey() {
         return new RsaKey(this.n, this.e);
     }
 
+    /**
+     * Creates a new RSA public key from the given JSON string
+     * @throws Exception
+     */
     public static RsaPrivateKey importFromJson(String json) throws Exception {
         Gson gson = new Gson();
 
