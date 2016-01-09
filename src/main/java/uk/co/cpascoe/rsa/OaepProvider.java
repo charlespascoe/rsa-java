@@ -21,26 +21,43 @@ public class OaepProvider {
     private String digestName;
     private int digestLength;
 
+    /**
+     * Creates a new OaepProvider instance, using the default SHA-256 MaskGenerator
+     */
     public OaepProvider() {
         this(new MaskGenerator());
     }
 
+    /**
+     * Creates a new OaepProvider instance, using the given MaskGenerator
+     */
     public OaepProvider(MaskGenerator maskGen) {
         this.maskGen = maskGen;
         this.digestName = maskGen.getDigestName();
         this.digestLength = maskGen.getDigestLength();
     }
 
+    /**
+     * Creates a new OaepProvider instance, using the given MaskGenerator, and the given message digest for label/seed hashing
+     * @param mdName The name of the message digest (hashing) function to use
+     * @throws NoSuchAlgorithmException If the given message digest does not exist
+     */
     public OaepProvider(MaskGenerator maskGen, String digestName) throws NoSuchAlgorithmException {
         this.maskGen = maskGen;
         this.digestName = digestName;
         this.digestLength = MessageDigest.getInstance(digestName).getDigestLength();
     }
 
+    /**
+     * Returns the name of the message digest
+     */
     public int getDigestLength() {
         return this.digestLength;
     }
 
+    /**
+     * Returns the hash of the given input data, using the message digest
+     */
     protected byte[] hash(byte[] input) {
         try {
             return MessageDigest.getInstance(this.digestName).digest(input);
@@ -51,22 +68,56 @@ public class OaepProvider {
         }
     }
 
+    /**
+     * Returns the maximum allowed message length for the given key length
+     * @param keyLength The length of the RSA Key Modulus, in bytes
+     */
     public int maxMessageLength(int keylength) {
         return keylength - 2*maskGen.getDigestLength() - 2;
     }
 
+    /**
+     * Encodes the given message for a key of the given length
+     * @param msg The message to encode
+     * @param keyLength The length of the RSA Key Modulus, in bytes
+     * @throws EncodingException
+     */
     public byte[] encode(byte[] msg, int keyLength) throws EncodingException {
         return this.encode(msg, keyLength, new byte[0]);
     }
 
+    /**
+     * Encodes the given message for a key of the given length
+     * @param msg The message to encode
+     * @param keyLength The length of the RSA Key Modulus, in bytes
+     * @param label The label to encode with this message, as per PKCS#1v2.2 standard
+     * @throws EncodingException
+     */
     public byte[] encode(byte[] msg, int keyLength, byte[] label) throws EncodingException {
         return this.encode(msg, keyLength, label, false);
     }
 
+    /**
+     * Encodes the given message for a key of the given length
+     * @param msg The message to encode
+     * @param keyLength The length of the RSA Key Modulus, in bytes
+     * @param label The label or the hash of the label to encode with this message, as per PKCS#1v2.2 standard
+     * @param labelIsHash True if the value of "label" is already a hash (using the same message digest); False otherwise
+     * @throws EncodingException
+     */
     public byte[] encode(byte[] msg, int keyLength, byte[] label, boolean labelIsHash) throws EncodingException {
         return this.encode(msg, keyLength, label, labelIsHash, new SecureRandom().generateSeed(this.digestLength));
     }
 
+    /**
+     * Encodes the given message for a key of the given length
+     * @param msg The message to encode
+     * @param keyLength The length of the RSA Key Modulus, in bytes
+     * @param label The label or the hash of the label to encode with this message, as per PKCS#1v2.2 standard
+     * @param labelIsHash True if the value of "label" is already a hash (using the same message digest); False otherwise
+     * @param seed The seed to use to encode the message, as per PKCS#1v2.2 standard
+     * @throws EncodingException
+     */
     public byte[] encode(byte[] msg, int keyLength, byte[] label, boolean labelIsHash, byte[] seed) throws EncodingException {
         if (msg.length > this.maxMessageLength(keyLength)) {
             throw new EncodingException("Message too long");
@@ -92,7 +143,11 @@ public class OaepProvider {
         return Utils.concat(maskedSeed, maskedDataBlock);
     }
 
-    public static byte[] buildDataBlock(byte[] labelHash, byte[] msg, int maxMessageLength) throws EncodingException {
+    /**
+     * Creates the data block (combination of label hash, padding, and the message)
+     * @throws EncodingException
+     */
+    protected static byte[] buildDataBlock(byte[] labelHash, byte[] msg, int maxMessageLength) throws EncodingException {
         if (msg.length > maxMessageLength) {
             throw new EncodingException("Message too long");
         }
@@ -103,21 +158,42 @@ public class OaepProvider {
         return Utils.concat(labelHash, padding, new byte[] {1}, msg);
     }
 
-    public byte[] decode(byte[] encMsgBlock, int keySize) throws DecodingException {
-        return this.decode(encMsgBlock, keySize, new byte[0]);
+    /**
+     * Decodes the given encoded message block
+     * @param encMsgBlock The encoded message block, whose length must be equal to keyLength
+     * @param keyLength The length of the RSA Key Modulus, in bytes
+     * @throws DecodingException
+     */
+    public byte[] decode(byte[] encMsgBlock, int keyLength) throws DecodingException {
+        return this.decode(encMsgBlock, keyLength, new byte[0]);
     }
 
-    public byte[] decode(byte[] encMsgBlock, int keySize, byte[] label) throws DecodingException {
-        return this.decode(encMsgBlock, keySize, label, false);
+    /**
+     * Decodes the given encoded message block
+     * @param encMsgBlock The encoded message block, whose length must be equal to keyLength
+     * @param keyLength The length of the RSA Key Modulus, in bytes
+     * @param label The label that the original message was encoded with - decoding fails if this does not match
+     * @throws DecodingException
+     */
+    public byte[] decode(byte[] encMsgBlock, int keyLength, byte[] label) throws DecodingException {
+        return this.decode(encMsgBlock, keyLength, label, false);
     }
 
-    public byte[] decode(byte[] encMsgBlock, int keySize, byte[] label, boolean labelIsHash) throws DecodingException {
-        if (encMsgBlock.length != keySize - 1) {
-            throw new DecodingException("encMsgBlock length must be equal to keySize - 1");
+    /**
+     * Decodes the given encoded message block
+     * @param encMsgBlock The encoded message block, whose length must be equal to keyLength
+     * @param keyLength The length of the RSA Key Modulus, in bytes
+     * @param label The label or hash of the label that the original message was encoded with - decoding fails if this does not match
+     * @param labelIsHash True if the value of "label" is already a hash (using the same message digest); False otherwise
+     * @throws DecodingException
+     */
+    public byte[] decode(byte[] encMsgBlock, int keyLength, byte[] label, boolean labelIsHash) throws DecodingException {
+        if (encMsgBlock.length != keyLength - 1) {
+            throw new DecodingException("encMsgBlock length must be equal to keyLength - 1");
         }
 
-        if (keySize < (2*this.getDigestLength() + 2)) {
-            throw new DecodingException("keySize too small");
+        if (keyLength < (2*this.getDigestLength() + 2)) {
+            throw new DecodingException("keyLength too small");
         }
 
         byte[] labelHash;
@@ -148,7 +224,10 @@ public class OaepProvider {
         return OaepProvider.removePadding(decodedPaddedMessage);
     }
 
-    public static byte[] removePadding(byte[] paddedMessage) {
+    /**
+     * Removes the padding from the given padded message, as per PKCS#1v2.2
+     */
+    protected static byte[] removePadding(byte[] paddedMessage) {
         for (int i = 0; i < paddedMessage.length; i++) {
             if (paddedMessage[i] == 1) {
                 return Utils.removeBytes(paddedMessage, i + 1);
