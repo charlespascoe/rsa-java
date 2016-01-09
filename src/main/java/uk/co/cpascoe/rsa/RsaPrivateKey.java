@@ -90,6 +90,10 @@ public class RsaPrivateKey extends RsaKey {
         return data;
     }
 
+    public RsaKey exportPublicKey() {
+        return new RsaKey(this.n, this.e);
+    }
+
     public static RsaPrivateKey importFromJson(String json) throws Exception {
         Gson gson = new Gson();
 
