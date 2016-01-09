@@ -16,11 +16,19 @@ public class RsaProvider {
 
     private final RsaKey rsaKey;
 
+    /**
+     * Creates a new RsaProvider which uses the given RsaKey
+     * @throws NullPointerException If the RSA Key is null
+     */
     public RsaProvider(RsaKey rsaKey) {
         if (rsaKey == null) throw new NullPointerException("rsaKey should not be null");
         this.rsaKey = rsaKey;
     }
 
+    /**
+     * Encrypts the given symmetric key using RSA
+     * @throws EncryptionException
+     */
     protected byte[] encryptKey(byte[] symmetricKey) throws EncryptionException {
         int keyByteLength = this.rsaKey.byteCount();
 
@@ -44,6 +52,10 @@ public class RsaProvider {
         return Arrays.copyOf(c.exportToByteArray(), keyByteLength);
     }
 
+    /**
+     * Decrypts the symmetric key using RSA
+     * @throws DecryptionException
+     */
     protected byte[] decryptKey(byte[] encryptedKeyBlock) throws DecryptionException {
         int keyByteLength = this.rsaKey.byteCount();
 
@@ -61,6 +73,13 @@ public class RsaProvider {
         }
     }
 
+    /**
+     * Encrypts all data from an input stream and writes it to an output stream, including keying data
+     * @param input The unencrypted input stream
+     * @param output The encrypted output stream
+     * @throws IOException
+     * @throws EncryptionException
+     */
     public void encrypt(InputStream input, OutputStream output) throws IOException, EncryptionException {
         KeyGenerator keyGen;
         Cipher cipher;
@@ -90,6 +109,13 @@ public class RsaProvider {
         encryptedOutput.close();
     }
 
+    /**
+     * Decrypts all data from an input stream and writes it to an output stream
+     * @param input The encrypted input stream
+     * @param output The decrypted output stream
+     * @throws IOException
+     * @throws EncryptionException
+     */
     public void decrypt(InputStream input, OutputStream output) throws IOException, DecryptionException {
         Cipher cipher;
         SecretKey key;
@@ -118,6 +144,9 @@ public class RsaProvider {
         decryptedOutput.close();
     }
 
+    /**
+     * Encrypts the given data with RSA/AES
+     */
     public byte[] encrypt(byte[] data) throws EncryptionException {
         ByteArrayInputStream input = new ByteArrayInputStream(data);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -131,6 +160,9 @@ public class RsaProvider {
         return output.toByteArray();
     }
 
+    /**
+     * Decrypts the given data that was encrypted with RSA/AES and the RSA Key
+     */
     public byte[] decrypt(byte[] data) throws DecryptionException {
         ByteArrayInputStream input = new ByteArrayInputStream(data);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
