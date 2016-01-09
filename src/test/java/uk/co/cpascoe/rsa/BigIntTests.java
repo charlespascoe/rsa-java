@@ -13,17 +13,6 @@ public class BigIntTests {
     }
 
     @Test
-    public void createFromByteArray() {
-        assertArrayEquals(new int[] {0}, new BigInt(new byte[] {0}).exportToIntArray());
-        assertArrayEquals(new int[] {1}, new BigInt(new byte[] {1,0}).exportToIntArray());
-        assertArrayEquals(new int[] {256}, new BigInt(new byte[] {0,1}).exportToIntArray());
-        assertArrayEquals(new int[] {(int)4294967295L}, new BigInt(new byte[] {(byte)255,(byte)255,(byte)255,(byte)255}).exportToIntArray());
-        assertArrayEquals(new int[] {0,1}, new BigInt(new byte[] {0,0,0,0,1}).exportToIntArray());
-        assertArrayEquals(new int[] {0,(int)4294967295L}, new BigInt(new byte[] {0,0,0,0,(byte)255,(byte)255,(byte)255,(byte)255}).exportToIntArray());
-        assertArrayEquals(new int[] {1,2,3,4}, new BigInt(new byte[] {1,0,0,0,2,0,0,0,3,0,0,0,4,0,0,0}).exportToIntArray());
-    }
-
-    @Test
     public void createFromIntArray() {
         assertArrayEquals(new int[] {0}, new BigInt(new int[] {0}).exportToIntArray());
         assertArrayEquals(new int[] {1}, new BigInt(new int[] {1}).exportToIntArray());
@@ -32,6 +21,17 @@ public class BigIntTests {
         assertArrayEquals(new int[] {0,1}, new BigInt(new int[] {0,1}).exportToIntArray());
         assertArrayEquals(new int[] {0,(int)4294967295L}, new BigInt(new int[] {0,(int)4294967295L}).exportToIntArray());
         assertArrayEquals(new int[] {1,2,3,4}, new BigInt(new int[] {1,2,3,4}).exportToIntArray());
+    }
+
+    @Test
+    public void createFromByteArray() {
+        assertArrayEquals(new int[] {0}, new BigInt(new byte[] {0}).exportToIntArray());
+        assertArrayEquals(new int[] {1}, new BigInt(new byte[] {1,0}).exportToIntArray());
+        assertArrayEquals(new int[] {256}, new BigInt(new byte[] {0,1}).exportToIntArray());
+        assertArrayEquals(new int[] {(int)4294967295L}, new BigInt(new byte[] {(byte)255,(byte)255,(byte)255,(byte)255}).exportToIntArray());
+        assertArrayEquals(new int[] {0,1}, new BigInt(new byte[] {0,0,0,0,1}).exportToIntArray());
+        assertArrayEquals(new int[] {0,(int)4294967295L}, new BigInt(new byte[] {0,0,0,0,(byte)255,(byte)255,(byte)255,(byte)255}).exportToIntArray());
+        assertArrayEquals(new int[] {1,2,3,4}, new BigInt(new byte[] {1,0,0,0,2,0,0,0,3,0,0,0,4,0,0,0}).exportToIntArray());
     }
 
     @Test
@@ -230,11 +230,14 @@ public class BigIntTests {
 
     @Test
     public void subtract() {
-        assertArrayEquals(new int[] {5}, new BigInt(8).subtract(new BigInt(3)).exportToIntArray());
+        BigInt a = new BigInt(8);
+        assertArrayEquals(new int[] {5}, a.subtract(new BigInt(3)).exportToIntArray());
+        assertArrayEquals("a should not have changed", new int[] {8}, a.exportToIntArray());
 
         BigInt x = new BigInt(new int[] {0,10});
         BigInt y = new BigInt(new int[] {1,8});
         assertArrayEquals(new int[] {(int)4294967295L,1}, x.subtract(y).exportToIntArray());
+        assertArrayEquals("x should not have changed", new int[] {0, 10}, x.exportToIntArray());
     }
 
     @Test
