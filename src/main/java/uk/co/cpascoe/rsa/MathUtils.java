@@ -21,7 +21,7 @@ public abstract class MathUtils {
     public static byte[] intToBigEndianBytes(int value) {
         byte[] data = new byte[4];
 
-        int mask = 255;
+        int mask = 0xFF;
 
         for (int i = 3; i >= 0; i--) {
             data[i] = (byte)(mask & value);
@@ -31,16 +31,23 @@ public abstract class MathUtils {
         return data;
     }
 
+    /**
+     * Returns the unsigned representation of the given signed byte
+     */
     public static int unsignedByte(byte value) {
-        return value < 0 ? value + 256 : value;
-    }
-
-    public static long unsignedInt(int value) {
-        return value < 0 ? value + Constants.TWO_POW_32 : value;
+        return value & 0xFF;
     }
 
     /**
-     * Returns the integer represented by the big-endian byte array passed in
+     * Returns the unsigned representation of the given signed int
+     */
+    public static long unsignedInt(int value) {
+        return value & Constants.UNSIGNED_INT_MASK;
+    }
+
+    /**
+     * Returns the integer represented by the given big-endian byte array
+     * @throws Error If the data does not have a length of 4
      */
     public static int bigEndianBytesToInt(byte[] data) {
         if (data.length != 4) {
@@ -57,7 +64,8 @@ public abstract class MathUtils {
     }
 
     /**
-     * Returns the integer represented by the big-endian byte array passed in
+     * Returns the integer represented by the given little-endian byte array
+     * @throws Error If the data does not have a length of 4
      */
     public static int littleEndianBytesToInt(byte[] data) {
         if (data.length != 4) {
@@ -73,10 +81,16 @@ public abstract class MathUtils {
         return value;
     }
 
+    /**
+     * Compares two signed integers as if they where unsigned integers
+     */
     public static int unsignedIntCompare(int a, int b) {
         return Long.compare(MathUtils.unsignedInt(a), MathUtils.unsignedInt(b));
     }
 
+    /**
+     * Computes the greatest common divisor of a and b
+     */
     public static BigInt gcd(BigInt a, BigInt b) {
         if (a.equals(0)) return b;
         if (b.equals(0)) return a;
@@ -104,8 +118,13 @@ public abstract class MathUtils {
         }
     }
 
+    /**
+     * Generates a random BigInt of the given number of bits
+     * @param bits The maximum number of bits that the BigInt will have
+     * @param random The source of randomness
+     */
     public static BigInt randomBigInt(int bits, Random random) {
-        byte[] bytes = new byte[(bits + 7) / 8];
+        byte[] bytes = new byte[MathUtils.divCeil(bits, 8)];
 
         random.nextBytes(bytes);
 
@@ -114,12 +133,15 @@ public abstract class MathUtils {
         if (remainingBits > 0) {
             // If the number of bits is not a multple of 8,
             // then mask and remove the highest bits of the highest-order byte that are not required
-            bytes[bytes.length - 1] = (byte)(bytes[bytes.length - 1] & (255 >> (8 - remainingBits)));
+            bytes[bytes.length - 1] = (byte)(bytes[bytes.length - 1] & (0xFF >> (8 - remainingBits)));
         }
 
         return new BigInt(bytes);
     }
 
+    /**
+     * Generates a random BigInt between and including lower and upper limits
+     */
     public static BigInt randomBigInt(BigInt lowerLimit, BigInt upperLimit, Random random) {
         BigInt x;
 
@@ -130,6 +152,10 @@ public abstract class MathUtils {
         return x;
     }
 
+    /**
+     * Generates a random number which probably prime
+     * @param bits The number of bits the number will have (i.e. the number will not be less than 2^bits, and not greater than 2^(bits + 1) - 1)
+     */
     public static BigInt generateProbablePrime(int bits) {
         Random r = new SecureRandom();
         BigInt randomNumber;
