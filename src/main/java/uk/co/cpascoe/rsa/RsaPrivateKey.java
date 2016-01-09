@@ -49,21 +49,16 @@ public class RsaPrivateKey extends RsaKey {
         this.e = new BigInt(65537);
 
         do {
-            System.out.println("Generating P");
             this.p = MathUtils.generateProbablePrime(bits / 2);
-            System.out.println("Generating Q");
             this.q = MathUtils.generateProbablePrime(bits / 2);
 
-            System.out.println("Generated Primes");
-
             this.n = this.p.multiply(q);
-            this.phi_n = this.p.subtract(new BigInt(1)).multiply(this.q.subtract(new BigInt(1)));
-
-        } while (!MathUtils.gcd(this.e, this.phi_n).equals(new BigInt(1)));
+            this.phi_n = this.p.subtract(1).multiply(this.q.subtract(1));
+        } while (!MathUtils.gcd(this.e, this.phi_n).equals(0));
 
         this.d = this.e.modInverse(this.phi_n);
-        this.dp = this.d.mod(this.p.subtract(new BigInt(1)));
-        this.dq = this.d.mod(this.q.subtract(new BigInt(1)));
+        this.dp = this.d.mod(this.p.subtract(1));
+        this.dq = this.d.mod(this.q.subtract(1));
         this.qinv = this.q.modInverse(this.p);
     }
 
