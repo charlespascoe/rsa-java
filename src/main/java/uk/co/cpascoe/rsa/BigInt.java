@@ -316,11 +316,16 @@ public class BigInt implements Comparable<BigInt> {
 
     /**
      * Returns the result of the addition of this BigInt and the given int
+     * @param other The value to add to this BigInt - negative numbers will subtract
      */
     public BigInt add(int other) {
         BigInt result = new BigInt(this.digits);
 
-        if (other > 0) result.addToDigit(other, 0);
+        if (other >= 0) {
+            result.addToDigit(other, 0);
+        } else {
+            result.subtractFromDigit(-other, 0);
+        }
 
         return result;
     }
@@ -342,11 +347,16 @@ public class BigInt implements Comparable<BigInt> {
 
     /**
      * Returns the result of this BigInt minus the given int
+     * @param other The value to subtract from this BigInt - negative numbers will add
      */
     public BigInt subtract(int other) {
         BigInt result = new BigInt(this.digits);
 
-        if (other > 0) result.subtractFromDigit(other, 0);
+        if (other >= 0) {
+            result.subtractFromDigit(other, 0);
+        } else {
+            result.addToDigit(-other, 0);
+        }
 
         return result;
     }

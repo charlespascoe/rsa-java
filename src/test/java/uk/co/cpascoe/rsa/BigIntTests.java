@@ -218,6 +218,14 @@ public class BigIntTests {
         BigInt x = new BigInt(1);
         assertArrayEquals(new int[] {3}, x.add(2).exportToIntArray());
         assertArrayEquals("x should not have changed", new int[] {1}, x.exportToIntArray());
+
+        BigInt y = new BigInt(10);
+        assertArrayEquals(new int[] {4}, y.add(-6).exportToIntArray());
+        assertArrayEquals("y should not have changed", new int[] {10}, y.exportToIntArray());
+
+        BigInt z = new BigInt(new int[] {(int)4294967295L});
+        assertArrayEquals("Correctly takes carry into account", new int[] {2, 1}, z.add(3).exportToIntArray());
+        assertArrayEquals("z should not have changed", new int[] {(int)4294967295L}, z.exportToIntArray());
     }
 
     @Test
@@ -234,6 +242,12 @@ public class BigIntTests {
         BigInt x = new BigInt(123);
         assertArrayEquals(new int[] {103}, x.subtract(20).exportToIntArray());
         assertArrayEquals("x should not have changed", new int[] {123}, x.exportToIntArray());
+        assertArrayEquals(new int[] {143}, x.subtract(-20).exportToIntArray());
+        assertArrayEquals("x should not have changed", new int[] {123}, x.exportToIntArray());
+
+        BigInt y = new BigInt(new int[] {2, 1});
+        assertArrayEquals("Correctly takes carry into account", new int[] {(int)4294967295L}, y.subtract(3).exportToIntArray());
+        assertArrayEquals("y should not have changed", new int[] {2, 1}, y.exportToIntArray());
     }
 
     @Test
