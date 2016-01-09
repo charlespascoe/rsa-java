@@ -19,11 +19,11 @@ public abstract class Utils {
         return p.matcher(str).matches();
     }
 
-    public static String bytesToBase64(byte[] bytes) {
+    public static String bytesToHex(byte[] bytes) {
         return DatatypeConverter.printHexBinary(bytes);
     }
 
-    public static byte[] base64ToBytes(String base64) {
+    public static byte[] hexToBytes(String base64) {
         return DatatypeConverter.parseHexBinary(base64);
     }
 

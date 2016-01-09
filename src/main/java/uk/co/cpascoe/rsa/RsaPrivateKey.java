@@ -36,13 +36,13 @@ public class RsaPrivateKey extends RsaKey {
             }
         }
 
-        this.p = new BigInt(Utils.base64ToBytes(data.get("p")));
-        this.q = new BigInt(Utils.base64ToBytes(data.get("q")));
-        this.phi_n = new BigInt(Utils.base64ToBytes(data.get("phi_n")));
-        this.d = new BigInt(Utils.base64ToBytes(data.get("d")));
-        this.dp = new BigInt(Utils.base64ToBytes(data.get("dp")));
-        this.dq = new BigInt(Utils.base64ToBytes(data.get("dq")));
-        this.qinv = new BigInt(Utils.base64ToBytes(data.get("qinv")));
+        this.p = new BigInt(Utils.hexToBytes(data.get("p")));
+        this.q = new BigInt(Utils.hexToBytes(data.get("q")));
+        this.phi_n = new BigInt(Utils.hexToBytes(data.get("phi_n")));
+        this.d = new BigInt(Utils.hexToBytes(data.get("d")));
+        this.dp = new BigInt(Utils.hexToBytes(data.get("dp")));
+        this.dq = new BigInt(Utils.hexToBytes(data.get("dq")));
+        this.qinv = new BigInt(Utils.hexToBytes(data.get("qinv")));
     }
 
     public RsaPrivateKey(int bits) {
@@ -84,13 +84,13 @@ public class RsaPrivateKey extends RsaKey {
     public Map<String, String> exportToMap() {
         Map<String, String> data = super.exportToMap();
 
-        data.put("p", Utils.bytesToBase64(this.p.exportToByteArray()));
-        data.put("q", Utils.bytesToBase64(this.q.exportToByteArray()));
-        data.put("phi_n", Utils.bytesToBase64(this.phi_n.exportToByteArray()));
-        data.put("d", Utils.bytesToBase64(this.d.exportToByteArray()));
-        data.put("dp", Utils.bytesToBase64(this.dp.exportToByteArray()));
-        data.put("dq", Utils.bytesToBase64(this.dq.exportToByteArray()));
-        data.put("qinv", Utils.bytesToBase64(this.qinv.exportToByteArray()));
+        data.put("p", Utils.bytesToHex(this.p.exportToByteArray()));
+        data.put("q", Utils.bytesToHex(this.q.exportToByteArray()));
+        data.put("phi_n", Utils.bytesToHex(this.phi_n.exportToByteArray()));
+        data.put("d", Utils.bytesToHex(this.d.exportToByteArray()));
+        data.put("dp", Utils.bytesToHex(this.dp.exportToByteArray()));
+        data.put("dq", Utils.bytesToHex(this.dq.exportToByteArray()));
+        data.put("qinv", Utils.bytesToHex(this.qinv.exportToByteArray()));
 
         return data;
     }

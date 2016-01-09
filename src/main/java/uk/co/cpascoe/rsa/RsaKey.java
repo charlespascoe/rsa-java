@@ -10,11 +10,16 @@ public class RsaKey {
     protected BigInt n;
     protected BigInt e;
 
-    public RsaKey() {
+    protected RsaKey() {
 
     }
 
-    public RsaKey(Map<String, String> data) throws Exception {
+    protected RsaKey(BigInt n, BigInt e) {
+        this.n = n;
+        this.e = e;
+    }
+
+    protected RsaKey(Map<String, String> data) throws Exception {
         if (!data.containsKey("n") || !data.containsKey("e")) {
             throw new Exception("Keys missing from data object");
         }
@@ -23,8 +28,8 @@ public class RsaKey {
             throw new Exception("Invalid hex values");
         }
 
-        this.n = new BigInt(Utils.base64ToBytes(data.get("n")));
-        this.e = new BigInt(Utils.base64ToBytes(data.get("e")));
+        this.n = new BigInt(Utils.hexToBytes(data.get("n")));
+        this.e = new BigInt(Utils.hexToBytes(data.get("e")));
     }
 
     public int byteCount() {
@@ -42,8 +47,8 @@ public class RsaKey {
     public Map<String, String> exportToMap() {
         Map<String, String> data = new HashMap<String, String>();
 
-        data.put("n", Utils.bytesToBase64(this.n.exportToByteArray()));
-        data.put("e", Utils.bytesToBase64(this.e.exportToByteArray()));
+        data.put("n", Utils.bytesToHex(this.n.exportToByteArray()));
+        data.put("e", Utils.bytesToHex(this.e.exportToByteArray()));
 
         return data;
     }
