@@ -54,10 +54,6 @@ public class RsaKey {
         return val.powMod(this.e, this.n);
     }
 
-    public byte[] exportDer() {
-        return new byte[0];
-    }
-
     /**
      * Exports this key to a map
      */
