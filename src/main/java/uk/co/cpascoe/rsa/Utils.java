@@ -19,12 +19,22 @@ public abstract class Utils {
         return p.matcher(str).matches();
     }
 
+    /**
+     * Converts an array of bytes into its hex representation
+     *
+     * @param bytes The non-null array of bytes to convert
+     */
     public static String bytesToHex(byte[] bytes) {
         return DatatypeConverter.printHexBinary(bytes);
     }
 
-    public static byte[] hexToBytes(String base64) {
-        return DatatypeConverter.parseHexBinary(base64);
+    /**
+     * Converts a hex string into an array of bytes
+     *
+     * @param hex The hex string of bytes - must be even length
+     */
+    public static byte[] hexToBytes(String hex) {
+        return DatatypeConverter.parseHexBinary(hex);
     }
 
     /**
@@ -82,6 +92,11 @@ public abstract class Utils {
         return Arrays.copyOfRange(input, count, input.length);
     }
 
+    /**
+     * Writes all data from the input stream to the output stream
+     *
+     * @throws IOException
+     */
     public static void pipeStream(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[65536];
 
@@ -92,6 +107,11 @@ public abstract class Utils {
         }
     }
 
+    /**
+     * Compares two byte arrays for equality in constant time
+     *
+     * @return True if a and b are equal length and each element is equal, false otherwise
+     */
     public static boolean constantTimeEquals(byte[] a, byte[] b) {
         if (a.length != b.length) return false;
 

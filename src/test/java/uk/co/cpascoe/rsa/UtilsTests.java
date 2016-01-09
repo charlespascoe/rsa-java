@@ -34,6 +34,18 @@ public class UtilsTests {
     }
 
     @Test
+    public void bytesToHex() {
+        assertEquals("", Utils.bytesToHex(new byte[0]));
+        assertEquals("0102030F10FF", Utils.bytesToHex(new byte[] {1,2,3,15,16,(byte)255}));
+    }
+
+    @Test
+    public void hexToBytes() {
+        assertArrayEquals(new byte[0], Utils.hexToBytes(""));
+        assertArrayEquals(new byte[] {1,2,3,15,16,(byte)255}, Utils.hexToBytes("0102030F10FF"));
+    }
+
+    @Test
     public void xorBytes() {
         assertArrayEquals(new byte[] {}, Utils.xorBytes(new byte[] {}, new byte[] {}));
         assertArrayEquals(new byte[] {0}, Utils.xorBytes(new byte[] {0}, new byte[] {0}));
