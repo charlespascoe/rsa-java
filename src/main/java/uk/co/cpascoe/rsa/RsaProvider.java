@@ -117,6 +117,10 @@ public class RsaProvider {
      * @throws EncryptionException
      */
     public void decrypt(InputStream input, OutputStream output) throws IOException, DecryptionException {
+        if (!(this.rsaKey instanceof RsaPrivateKey)) {
+            throw new DecryptionException("RsaPrivateKey required for decryption!");
+        }
+
         Cipher cipher;
         SecretKey key;
 
