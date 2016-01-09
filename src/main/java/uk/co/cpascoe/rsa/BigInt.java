@@ -24,7 +24,9 @@ public class BigInt implements Comparable<BigInt> {
      */
     private int[] digits;
 
-
+    /**
+     * The memoised products of this BigInt and increasing powers of 2, for binary long division
+     */
     private BigInt[] powerOf2Multiples = null;
 
     /**
@@ -127,6 +129,9 @@ public class BigInt implements Comparable<BigInt> {
         }
     }
 
+    /**
+     * Moves all bits in this BigInt up by 1 bit position
+     */
     protected void shiftBitsUp() {
         boolean carry = false;
         boolean prevCarry = false;
@@ -152,6 +157,9 @@ public class BigInt implements Comparable<BigInt> {
         }
     }
 
+    /**
+     * Moves all bits in this BigInt down by 1 bit position
+     */
     protected void shiftBitsDown() {
         boolean carry = false;
         boolean prevCarry = false;
@@ -173,6 +181,10 @@ public class BigInt implements Comparable<BigInt> {
         }
     }
 
+    /**
+     * Returns a copy of this value, where the bits have been shifted by the given number of bits
+     * @param bits The number of bits to move - positive moves bits up, negative down, and 0 is unchanged
+     */
     public BigInt shiftBits(int bits) {
         BigInt result = new BigInt(this.digits);
 
@@ -196,6 +208,10 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
+    /**
+     * Masks off the lowest-order bits of this BigInt
+     * @param bits The number of bits to preserve; for example, 4 will keep the lowest 4 bits as they are and set all other bits to 0
+     */
     protected BigInt maskLowerBits(int bits) {
         int[] newDigits = Arrays.copyOf(this.digits, MathUtils.divCeil(bits, 32));
 
@@ -332,6 +348,7 @@ public class BigInt implements Comparable<BigInt> {
 
     /**
      * Returns the result of this BigInt minus the given BigInt
+     * @throws Error If the other BigInt is larger than this BigInt
      */
     public BigInt subtract(BigInt other) {
         if (this.lessThan(other)) throw new Error("Cannot subtract a number from a smaller number (yet)");
@@ -520,6 +537,9 @@ public class BigInt implements Comparable<BigInt> {
         return t;
     }
 
+    /**
+     * Computes the value of this BigInt raised to the power of the given BigInt exponent
+     */
     public BigInt pow(BigInt exponent) {
         BigInt result = new BigInt(1);
         BigInt base = this;
@@ -534,6 +554,10 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
+    /**
+     * Computes the value of this BigInt raised to the power of the given BigInt exponent, modulo the given BigInt modulus
+     * @return The value of (this ^ exponent) mod modulus
+     */
     public BigInt powMod(BigInt exponent, BigInt modulus) {
         if (modulus.getBitAt(0) == 1)
             return this.montgomeryPowMod(exponent, modulus);
@@ -551,6 +575,14 @@ public class BigInt implements Comparable<BigInt> {
         return result;
     }
 
+    /**
+     * Computes the value of this BigInt raised to the power of the given BigInt exponent, modulo the given BigInt modulus, using the Montgomery Multiplication method
+     *
+     * @param modulus The modulus, which must be odd
+     * @return The value of (this ^ exponent) mod modulus
+     *
+     * @throws Error If the modulus is not odd
+     */
     protected BigInt montgomeryPowMod(BigInt exponent, BigInt modulus) {
         if (modulus.getBitAt(0) != 1) throw new Error("Modulus must be odd for Montgomery Exponentation");
 
@@ -578,6 +610,17 @@ public class BigInt implements Comparable<BigInt> {
         return resultR.multiply(rInverse).mod(modulus);
     }
 
+    /**
+     * Performs Montgomery multiplication using the given values
+     *
+     * @param arModm The Montgomery form of a, which is (a * r) mod m
+     * @param brModm The Montgomery form of b, which is (b * r) mod m
+     * @param m The modulus
+     * @param mDash The the inverse of m that satisfies (m * mDash) mod r = r - 1
+     * @param k The number of bits in r, i.e. r = 2^k
+     *
+     * @return The Montgomery form of (a * b), which is (a * b * r) mod m
+     */
     protected static BigInt montgomeryMultiplication(BigInt arModm, BigInt brModm, BigInt m, BigInt mDash, int k) {
         BigInt t = arModm.multiply(brModm);
 
@@ -650,6 +693,11 @@ public class BigInt implements Comparable<BigInt> {
         return true;
     }
 
+    /**
+     * Compares this BigInt with another BigInt, to compare values
+     *
+     * @return A number less than 0 if this BigInt is less than the provided one, a number greater than 0 if this BigInt is greater than the provided one, or 0 if they are equal
+     */
     public int compareTo(BigInt other) {
         int diff = this.bitCount() - other.bitCount();
 
@@ -687,12 +735,18 @@ public class BigInt implements Comparable<BigInt> {
         return other >= 0 && this.digitCount() == 1 && this.digits[0] == other;
     }
 
+    /**
+     * Returns a little-endian array of integers that represent this BigInt
+     */
     public int[] exportToIntArray() {
         // Copying array prevents external modification
-        // and reduces it to the minimum length without any high-order zeros
+        // and reduces it to the minimum length without any leading high-order zeros
         return Arrays.copyOf(this.digits, this.digitCount());
     }
 
+    /**
+     * Returns a little-endian array of bytes that represent this BigInt
+     */
     public byte[] exportToByteArray() {
         int [] digits = this.exportToIntArray();
         byte[] output = new byte[digits.length * 4];
@@ -703,7 +757,7 @@ public class BigInt implements Comparable<BigInt> {
             }
         }
 
-        // Resize it to remove any high-order zeros
+        // Resize it to remove any leading high-order zeros
         return Arrays.copyOf(output, this.byteCount());
     }
 }
