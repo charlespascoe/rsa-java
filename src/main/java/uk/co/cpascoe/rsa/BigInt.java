@@ -395,8 +395,9 @@ public class BigInt implements Comparable<BigInt> {
             long intMask = Constants.TWO_POW_32 - 1;
 
             for (int i = 0; i < this.digitCount(); i++) {
+                long thisDigit = this.getDigit(i) & Constants.UNSIGNED_INT_MASK;
                 for (int j = 0; j < other.digitCount(); j++) {
-                    long product = (this.getDigit(i) & Constants.UNSIGNED_INT_MASK) * (other.getDigit(j) & Constants.UNSIGNED_INT_MASK);
+                    long product = thisDigit * (other.getDigit(j) & Constants.UNSIGNED_INT_MASK);
                     if (product == 0) continue;
 
                     int digit1 = (int)(product & intMask);
@@ -419,8 +420,9 @@ public class BigInt implements Comparable<BigInt> {
         long intMask = Constants.TWO_POW_32 - 1;
 
         for (int i = 0; i < this.digitCount(); i++) {
+            long thisDigit = this.getDigit(i) & Constants.UNSIGNED_INT_MASK;
             for (int j = 0; j < i; j++) {
-                long product = (this.getDigit(i) & Constants.UNSIGNED_INT_MASK) * (this.getDigit(j) & Constants.UNSIGNED_INT_MASK);
+                long product = thisDigit * (this.getDigit(j) & Constants.UNSIGNED_INT_MASK);
                 if (product == 0) continue;
 
                 int digit1 = (int)(product & intMask);
