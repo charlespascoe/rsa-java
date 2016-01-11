@@ -1,7 +1,8 @@
-package uk.co.cpascoe.rsa;
+package uk.co.cpascoe.rsa.crypto.pkcs1;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import uk.co.cpascoe.rsa.maths.MathUtils;
 
 public class MaskGenerator {
     private String mdName;

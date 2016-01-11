@@ -1,4 +1,4 @@
-package uk.co.cpascoe.rsa;
+package uk.co.cpascoe.rsa.maths;
 
 import org.junit.Test;
 import static org.junit.Assert.*;

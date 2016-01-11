@@ -1,4 +1,4 @@
-package uk.co.cpascoe.rsa;
+package uk.co.cpascoe.rsa.crypto;
 
 import java.io.*;
 import java.security.*;
@@ -6,6 +6,9 @@ import java.util.Arrays;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import uk.co.cpascoe.rsa.maths.BigInt;
+import uk.co.cpascoe.rsa.Utils;
+import uk.co.cpascoe.rsa.crypto.pkcs1.OaepProvider;
 
 public class RsaProvider {
     public final static String CIPHER_NAME = "AES";

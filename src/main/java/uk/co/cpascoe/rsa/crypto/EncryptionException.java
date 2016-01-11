@@ -1,4 +1,4 @@
-package uk.co.cpascoe.rsa;
+package uk.co.cpascoe.rsa.crypto;
 
 public class EncryptionException extends Exception {
     public EncryptionException(String message) {

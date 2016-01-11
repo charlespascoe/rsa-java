@@ -1,10 +1,12 @@
-package uk.co.cpascoe.rsa;
+package uk.co.cpascoe.rsa.crypto;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Type;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import uk.co.cpascoe.rsa.maths.BigInt;
+import uk.co.cpascoe.rsa.Utils;
 
 public class RsaKey {
     protected BigInt n;

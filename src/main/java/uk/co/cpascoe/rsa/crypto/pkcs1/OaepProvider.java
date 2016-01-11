@@ -1,8 +1,9 @@
-package uk.co.cpascoe.rsa;
+package uk.co.cpascoe.rsa.crypto.pkcs1;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import uk.co.cpascoe.rsa.Utils;
 
 public class OaepProvider {
     public static class EncodingException extends Exception {

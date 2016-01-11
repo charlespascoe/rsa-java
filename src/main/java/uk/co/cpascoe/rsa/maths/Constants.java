@@ -1,4 +1,4 @@
-package uk.co.cpascoe.rsa;
+package uk.co.cpascoe.rsa.maths;
 
 public abstract class Constants {
     public static final long TWO_POW_32 = 4294967296L;

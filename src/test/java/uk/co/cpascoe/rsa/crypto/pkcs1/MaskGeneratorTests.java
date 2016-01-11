@@ -1,4 +1,4 @@
-package uk.co.cpascoe.rsa;
+package uk.co.cpascoe.rsa.crypto.pkcs1;
 
 import org.junit.Test;
 import static org.junit.Assert.*;

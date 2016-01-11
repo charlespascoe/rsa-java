@@ -1,4 +1,4 @@
-package uk.co.cpascoe.rsa;
+package uk.co.cpascoe.rsa.maths;
 
 import java.util.Random;
 import java.security.SecureRandom;
