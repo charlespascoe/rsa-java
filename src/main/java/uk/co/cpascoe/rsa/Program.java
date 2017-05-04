@@ -120,8 +120,8 @@ public class Program {
                         return;
                     }
 
-                    if (keySize != 256 && keySize != 512 && keySize != 1024 && keySize != 2048 && keySize != 4096) {
-                        System.err.println("Key size must be 256, 512, 1024, 2048, or 4096 bits");
+                    if (keySize != 1024 && keySize != 2048 && keySize != 4096) {
+                        System.err.println("Key size must be 1024, 2048, or 4096 bits");
                         return;
                     }
 
