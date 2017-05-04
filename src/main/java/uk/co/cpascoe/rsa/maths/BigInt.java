@@ -647,21 +647,25 @@ public class BigInt implements Comparable<BigInt> {
      * @return True if probably prime, false if definitely not prime
      */
     public boolean isProbablePrime(int certainty) {
+        if (this.getBitAt(0) == 0) {
+            return this.equals(2);
+        }
+
         for (int i = 0; i < 256; i++) {
             BigInt p = Constants.SMALL_PRIMES[i];
 
-            if (p.greaterThanOrEqual(this)) break;
+            if (this.equals(p)) return true;
 
-            if (MathUtils.gcd(this, p).equals(p)) {
-                return false;
-            }
+            if (p.greaterThan(this)) return false;
+
+            if (MathUtils.gcd(this, p).equals(p)) return false;
         }
 
         BigInt nMinusOne = this.subtract(1);
 
         // n - 1 = 2^s * d
         int s = nMinusOne.getLowestSetBit();
-        BigInt d = nMinusOne.quotient(new BigInt(2).pow(new BigInt(s)));
+        BigInt d = nMinusOne.shiftBits(-s);
 
         Random r = new SecureRandom();
 
@@ -674,7 +678,7 @@ public class BigInt implements Comparable<BigInt> {
                 boolean solutionFound = false;
 
                 for (int j = 0; j < s; j++) {
-                    x = x.multiply(x).mod(this);
+                    x = x.square().mod(this);
 
                     if (x.equals(1)) {
                         return false;

@@ -66,7 +66,7 @@ public class RsaPrivateKey extends RsaKey {
 
             this.n = this.p.multiply(q);
             this.phi_n = this.p.subtract(1).multiply(this.q.subtract(1));
-        } while (!MathUtils.gcd(this.e, this.phi_n).equals(0));
+        } while (!MathUtils.gcd(this.e, this.phi_n).equals(1));
 
         this.d = this.e.modInverse(this.phi_n);
         this.dp = this.d.mod(this.p.subtract(1));
