@@ -165,8 +165,9 @@ public class Program {
                 return;
             }
 
-        } catch (Exception ex) { System.out.println(ex); }
-
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+        }
     }
 
     private static void generateKey(int keySize, String name) {
