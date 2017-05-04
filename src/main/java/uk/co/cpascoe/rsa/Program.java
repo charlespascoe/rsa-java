@@ -144,7 +144,13 @@ public class Program {
             }
 
             if (encrypt && decrypt) {
-                System.out.println("Cannot encrypt and decrypt!");
+                System.err.println("Cannot encrypt and decrypt!");
+                return;
+            }
+
+            if (!encrypt && !decrypt) {
+                System.err.println("You need to either encrypt or decrypt");
+                return;
             }
 
             if (outputAsHex) {
@@ -152,19 +158,40 @@ public class Program {
             }
 
             if (encrypt) {
-                RsaKey key = RsaKey.importFromJson(Program.readJson(keyFile));
+                String json = Program.readJson(keyFile);
+
+                RsaKey key;
+
+                try {
+                    key = RsaKey.importFromJson(json);
+                } catch (Exception ex) {
+                    System.err.println("Failed to parse key");
+                    return;
+                }
+
                 RsaProvider rp = new RsaProvider(key);
                 rp.encrypt(input, output);
-                return;
             }
 
             if (decrypt) {
-                RsaPrivateKey key = RsaPrivateKey.importFromJson(Program.readJson(keyFile));
+                String json = Program.readJson(keyFile);
+
+                RsaPrivateKey key;
+                try {
+                    key = RsaPrivateKey.importFromJson(Program.readJson(keyFile));
+                } catch (Exception ex) {
+                    System.err.println("Failed to parse key (are you sure it's a private key?)");
+                    return;
+                }
+
                 RsaProvider rp = new RsaProvider(key);
                 rp.decrypt(input, output);
-                return;
             }
 
+            output.flush();
+            output.close();
+
+            System.err.println("Done!");
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
         }
@@ -173,7 +200,9 @@ public class Program {
     private static void generateKey(int keySize, String name) {
         System.err.printf("Generating %s bit RSA Key, please wait... ", keySize);
         RsaPrivateKey key = new RsaPrivateKey(keySize);
+        System.err.println("Done!");
 
+        System.err.printf("Writing private key information to %s.json\n", name);
         try (PrintWriter writer = new PrintWriter(new FileWriter(name + ".json"))) {
             writer.write(key.exportToJson());
         } catch (IOException ex) {
@@ -181,14 +210,13 @@ public class Program {
             return;
         }
 
+        System.err.printf("Writing public key information to %s_pub.json\n", name);
         try (PrintWriter writer = new PrintWriter(new FileWriter(name + "_pub.json"))) {
             writer.write(key.exportPublicKey().exportToJson());
         } catch (IOException ex) {
             System.err.println("Unable to write public key");
             return;
         }
-
-        System.err.println("Done!");
     }
 
     private static String readJson(String filename) throws IOException {
