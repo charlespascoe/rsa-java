@@ -81,8 +81,8 @@ public class Program {
 
                     String filename = argList.remove(0);
 
-                    try (FileInputStream strm = new FileInputStream(filename)) {
-                        input = strm;
+                    try {
+                        input = new FileInputStream(filename);
                     } catch (FileNotFoundException ex) {
                         System.err.printf("Input file '%s' not found%n", filename);
                         return;
@@ -95,8 +95,8 @@ public class Program {
 
                     String filename = argList.remove(0);
 
-                    try (FileOutputStream strm = new FileOutputStream(filename, false)) {
-                        output = strm;
+                    try {
+                        output = new FileOutputStream(filename, false);
                     } catch (FileNotFoundException ex) {
                         System.err.println("Cannot write to ouput file");
                         return;
